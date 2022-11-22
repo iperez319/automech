@@ -10,6 +10,8 @@
         "dev": "nodemon api/index.ts -e js,ts,json"
     },
     "dependencies": {
+        "bootstrap": "^4.6.1",
+        "bootstrap-vue": "^2.23.1",
         "connect-history-api-fallback": "^1.6.0",
         "connect-mongo": "^4.6.0",
         "cookie-parser": "~1.4.3",
@@ -54,7 +56,9 @@
                 "files": [
                     "**/*.ts"
                 ],
-                "excludedFiles": ["client/**"],
+                "excludedFiles": [
+                    "client/**"
+                ],
                 "extends": [
                     "xo",
                     "xo-typescript/space",
