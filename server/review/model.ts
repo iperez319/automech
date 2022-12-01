@@ -26,6 +26,7 @@ export type Review = {
   rating: number;
   model: Model; // TODO: Change this to Model type
   shop: Types.ObjectId;
+  author: string; //Username of the one who made the review
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
