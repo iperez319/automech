@@ -40,5 +40,5 @@ const ShopSchema = new Schema<Shop>({
   }
 });
 
-const ReviewModel = model<Shop>("Shop", ShopSchema);
-export default ReviewModel;
+const ShopModel = model<Shop>("Shop", ShopSchema);
+export default ShopModel;
