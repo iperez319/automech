@@ -2,13 +2,13 @@
   <main class="container">
     <section>
       <b-form>
-        <label for="shop">Shop:</label>
+        <label for="address">Address:</label>
         <!-- <b-input
           name="shop"
           :value="shopvalue"
           @input="shopvalue = $event.target"
         /> -->
-        <ShopAutocomplete v-model="shopSelected" />
+        <AddressAutocomplete v-model="addressSelected" />
         <label for="services">Services:</label>
         <multiselect
           v-model="value"
@@ -50,7 +50,7 @@
 
 <script>
 import Multiselect from "vue-multiselect";
-import ShopAutocomplete from "@/components/common/ShopAutocomplete.vue";
+import AddressAutocomplete from "@/components/common/AddressAutocomplete.vue";
 import ShopListItem from "./ShopListItem.vue";
 import { services } from "@/utils/constants";
 import { getShopsNearAddress } from "@/utils/stubs";
@@ -58,10 +58,10 @@ import { Loader } from "@googlemaps/js-api-loader";
 
 export default {
   name: "ComparePage",
-  components: { Multiselect, ShopAutocomplete, ShopListItem },
+  components: { Multiselect, AddressAutocomplete, ShopListItem },
   data() {
     return {
-      shopSelected: null,
+      addressSelected: null,
       value: [],
       serviceOptions: services,
       results: null,
@@ -91,7 +91,11 @@ export default {
 
       for (let shop of this.results) {
         bounds.extend(shop.coordinates);
-        new google.maps.Marker({ position: shop.coordinates, map: map });
+        new google.maps.Marker({
+          position: shop.coordinates,
+          map: map,
+          title: shop.name,
+        });
       }
 
       map.fitBounds(bounds);
