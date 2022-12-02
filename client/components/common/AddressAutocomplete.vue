@@ -9,7 +9,7 @@
   />
 </template>
 
-<script>
+<script lang="ts">
 import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
 import { debounce } from "lodash";
 
@@ -26,7 +26,14 @@ export default {
   },
   methods: {
     addressSelected(evt) {
-      this.$emit("input", evt);
+      let geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ placeId: evt.place_id }).then((res) => {
+        const result = res.results[0];
+        this.$emit("input", {
+          coordinates: result.geometry.location.toJSON(),
+          name: evt.structured_formatting.main_text,
+        });
+      });
     },
     searchPlace: debounce(function () {
       if (!google) return;
