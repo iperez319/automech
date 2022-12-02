@@ -22,7 +22,7 @@ type Service = {
 export type Review = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   description: string;
-  services: Service; // TODO: Change this to array of Services
+  services: Service; // TODO: Change this to array of Services (from service collection)
   rating: number;
   model: Model; // TODO: Change this to Model type
   shop: Types.ObjectId;

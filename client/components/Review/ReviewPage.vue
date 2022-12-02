@@ -3,8 +3,6 @@
     <section>
     	<header>
     		<h2>Reviews</h2>
-    		<ReviewForm />
-    		<h2>BETTER FORM (in progress):</h2>
     		<ReviewForm2 />
     	</header>
 <!--       <header>

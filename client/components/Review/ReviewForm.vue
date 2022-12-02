@@ -18,7 +18,8 @@ export default {
       ],
       title: 'Add Review',
       callback: () => {
-        const message = 'Successfully changed username!';
+        console.log('review added');
+        const message = 'Successfully added review!';
         this.$set(this.alerts, message, 'success');
         setTimeout(() => this.$delete(this.alerts, message), 3000);
       }
