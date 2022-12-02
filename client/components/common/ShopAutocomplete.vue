@@ -12,7 +12,6 @@
 <script>
 import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
 import { debounce } from "lodash";
-import { Loader } from "@googlemaps/js-api-loader";
 
 export default {
   name: "ShopAutocomplete",
@@ -21,7 +20,6 @@ export default {
     return {
       query: "",
       currentLocation: null,
-      loaded: false,
       results: [],
       selectedShop: null,
     };
@@ -31,7 +29,7 @@ export default {
       this.$emit("input", evt);
     },
     searchPlace: debounce(function () {
-      if (!this.loaded) return;
+      if (!google) return;
 
       const service = new google.maps.places.AutocompleteService();
 
@@ -61,19 +59,6 @@ export default {
     navigator.geolocation.getCurrentPosition((position) => {
       this.currentLocation = position;
       console.log(position);
-    });
-
-    const loader = new Loader({
-      apiKey: "AIzaSyBDEqPqGsjpE-nVKMnMvvblsXpZbS7ZK_w",
-      libraries: ["places"],
-    });
-
-    loader.loadCallback((e) => {
-      if (e) console.log(e);
-      else {
-        console.log("LOADED");
-        this.loaded = true;
-      }
     });
   },
 };

@@ -24,10 +24,26 @@
           :preselect-first="false"
         >
         </multiselect>
-        <label for="car">Services:</label>
+        <label for="car">Car:</label>
         <b-input placeholder="Year Make Model" id="car" />
-        <b-button variant="primary" type="submit"> Submit </b-button>
+        <b-button variant="primary" type="submit" @click="submitForm">
+          Submit
+        </b-button>
       </b-form>
+    </section>
+    <section>
+      <h3>Shops near 229 Vassar St.</h3>
+      <b-form-select
+        v-model="sortBy"
+        :options="['Distance', 'Rating']"
+        style="width: fit-content"
+      />
+      <div class="display">
+        <div style="flex-shrink: 0" class="listContainer">
+          <ShopListItem v-for="shop in results" :shop="shop" />
+        </div>
+        <div id="map"></div>
+      </div>
     </section>
   </main>
 </template>
@@ -35,30 +51,87 @@
 <script>
 import Multiselect from "vue-multiselect";
 import ShopAutocomplete from "@/components/common/ShopAutocomplete.vue";
+import ShopListItem from "./ShopListItem.vue";
+import { services } from "@/utils/constants";
+import { getShopsNearAddress } from "@/utils/stubs";
+import { Loader } from "@googlemaps/js-api-loader";
 
 export default {
   name: "ComparePage",
-  components: { Multiselect, ShopAutocomplete },
+  components: { Multiselect, ShopAutocomplete, ShopListItem },
   data() {
     return {
       shopSelected: null,
       value: [],
-      serviceOptions: [
-        { name: "Oil Change" },
-        { name: "Tire Adjustment" },
-        { name: "Spark Plug Replacement" },
-        { name: "Replace Oxygen Sensor" },
-        { name: "Tighten Fuel Cap" },
-        { name: "Replace AC" },
-      ],
+      serviceOptions: services,
+      results: null,
+      sortBy: "Distance",
     };
   },
   methods: {
     updateInput(value) {
       console.log(value);
     },
+    submitForm(evt) {
+      evt.preventDefault();
+      console.log("CLICKED");
+      this.results = [
+        ...getShopsNearAddress(10, {
+          lat: 42.3570416,
+          lng: -71.1017284,
+        }),
+      ];
+
+      let map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 42.3570416, lng: -71.1017284 },
+        zoom: 15,
+      });
+
+      const bounds = new google.maps.LatLngBounds();
+
+      for (let shop of this.results) {
+        bounds.extend(shop.coordinates);
+        new google.maps.Marker({ position: shop.coordinates, map: map });
+      }
+
+      map.fitBounds(bounds);
+    },
+  },
+  mounted() {
+    const loader = new Loader({
+      apiKey: "AIzaSyBDEqPqGsjpE-nVKMnMvvblsXpZbS7ZK_w",
+      libraries: ["places"],
+    });
+
+    loader.loadCallback((e) => {
+      if (e) console.log(e);
+      else {
+        console.log("LOADED");
+        this.loaded = true;
+      }
+    });
   },
 };
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+<style>
+.display {
+  display: flex;
+  gap: 10px;
+}
+
+#map {
+  width: 100%;
+  height: 500px;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+  height: 500px;
+}
+</style>

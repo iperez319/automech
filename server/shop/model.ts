@@ -27,8 +27,8 @@ const ShopSchema = new Schema<Shop>({
   name: String,
   address: String,
   coordinates: {
-    latitude: Number,
-    longitude: Number,
+    lat: Number,
+    lng: Number,
   },
   averageRatings: { // TODO: Change after creating Service Model
     type: Map,
