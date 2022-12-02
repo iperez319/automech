@@ -6,7 +6,6 @@
       <header>
         <h2>Welcome @{{ $store.state.username }}</h2>
       </header>
-      <CreateFreetForm />
     </section>
     <section v-else>
       <header>
@@ -14,10 +13,8 @@
       </header>
       <article>
         <h3>
-          Please 
-          <router-link to="/login">
-            Sign in or create an account
-          </router-link>
+          Please
+          <router-link to="/login"> Sign in or create an account </router-link>
         </h3>
       </article>
     </section>
@@ -25,12 +22,8 @@
 </template>
 
 <script>
-
 export default {
-  name: 'FreetPage',
-  mounted() {
-    this.$refs.getFreetsForm.submit();
-  }
+  name: "HomePage",
 };
 </script>
 
@@ -40,14 +33,15 @@ section {
   flex-direction: column;
 }
 
-header, header > * {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+header,
+header > * {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 button {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 section .scrollbox {
