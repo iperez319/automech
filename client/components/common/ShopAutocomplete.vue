@@ -26,7 +26,15 @@ export default {
   },
   methods: {
     shopSelected(evt) {
-      this.$emit("input", evt);
+      let geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ placeId: evt.place_id }).then((res) => {
+        const result = res.results[0];
+        this.$emit("input", {
+          coordinates: result.geometry.location.toJSON(),
+          name: evt.structured_formatting.main_text,
+          place_id: evt.place_id
+        });
+      });
     },
     searchPlace: debounce(function () {
       if (!google) return;
