@@ -9,7 +9,7 @@
   />
 </template>
 
-<script lang="ts">
+<script>
 import VueTypeaheadBootstrap from "vue-typeahead-bootstrap";
 import { debounce } from "lodash";
 
