@@ -1,3 +1,5 @@
+<!-- TODO: add star rating ui -->
+
 <template>
   <b-form @submit.prevent="submit">
 
@@ -37,8 +39,8 @@
     </b-button>
   </b-form>
 </template>
-<script>
 
+<script>
 //Credit: https://vue-multiselect.js.org/#sub-multiple-select
 import Multiselect from 'vue-multiselect'
 
