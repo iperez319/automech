@@ -1,6 +1,6 @@
-import ShopCollection from "server/shop/collection";
+import ShopCollection from "../shop/collection";
 import ReviewModel from "./model";
-import type { ShopRequest } from "server/shop/model";
+import type { ShopRequest } from "../shop/model";
 import type { Model, Service } from "./model";
 
 class ReviewCollection {

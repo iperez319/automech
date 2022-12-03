@@ -50,7 +50,6 @@ const ShopSchema = new Schema<Shop>({
       type: [Number],
       required: true,
     },
-    index: "2dsphere",
   },
   // address: String,
   averageRatings: {
@@ -64,6 +63,8 @@ const ShopSchema = new Schema<Shop>({
     of: Number,
   },
 });
+
+ShopSchema.index({ location: "2dsphere" });
 
 const ShopModel = model<Shop>("Shop", ShopSchema);
 export default ShopModel;
