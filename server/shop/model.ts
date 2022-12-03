@@ -10,12 +10,13 @@ import { Schema, model } from "mongoose";
 
 export type Shop = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
+  googlePlaceId: string;
   name: string;
-  address: string;
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  },
+  // address: string;
+  location: {
+    type: string,
+    coordinates: [lng: number, lat: number]
+  }
   averageRatings: Map<string, number>; // TODO: Change after creating Service Model
   averagePrices: Map<string, number>; // TODO: Change after creating Service Model
 };
@@ -25,11 +26,24 @@ export type Shop = {
 // type given by the type property, inside MongoDB
 const ShopSchema = new Schema<Shop>({
   name: String,
-  address: String,
-  coordinates: {
-    lat: Number,
-    lng: Number,
+  googlePlaceId: {
+    type: String,
+    required: true,
+    unique: true
   },
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+    index: '2dsphere'
+  },
+  // address: String,
   averageRatings: { // TODO: Change after creating Service Model
     type: Map,
     of: Number

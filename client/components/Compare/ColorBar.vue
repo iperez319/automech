@@ -1,3 +1,4 @@
+<!-- TODO: Fix pointer if time left -->
 <template>
   <div class="bar-container">
     <div class="small-section green"></div>
