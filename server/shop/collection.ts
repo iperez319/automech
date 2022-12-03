@@ -1,5 +1,5 @@
 import ShopModel from "./model";
-import type {Shop} from './model';
+import type { Shop } from "./model";
 
 class ShopCollection {
   /**
@@ -13,10 +13,10 @@ class ShopCollection {
     name: string,
     googlePlaceId: string,
     coordinates: { lat: number; lng: number }
-  ): Promise<Boolean> {
-    if (await ShopCollection.findByPlaceId(googlePlaceId)) {
-      return false;
-    }
+  ): Promise<Shop> {
+    let currentShop = await ShopCollection.findByPlaceId(googlePlaceId)
+    if (currentShop) return currentShop;
+    
     let newShop = new ShopModel({
       name,
       googlePlaceId,
@@ -26,9 +26,8 @@ class ShopCollection {
       },
     });
 
-    await newShop.save();
-    return true;
-  }
+    return await newShop.save();
+}
 
   static async findByPlaceId(googlePlaceId: string) {
     const shop = await ShopModel.findOne({ googlePlaceId });
@@ -41,18 +40,20 @@ class ShopCollection {
       lng: number;
     },
     radius: number // in mi
-  ) : Promise<Array<Shop>> {
-    const shops = await ShopModel.find({ 
-        location: {
-            $near: {
-                $geometry: {
-                    type: "Point",
-                    coordinates: [location.lng, location.lat]
-                },
-                $maxDistance: radius * 1609 // Convert from mi to meters
-            }
-        }
+  ): Promise<Array<Shop>> {
+    const shops = await ShopModel.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [location.lng, location.lat],
+          },
+          $maxDistance: radius * 1609, // Convert from mi to meters
+        },
+      },
     });
     return shops;
   }
 }
+
+export default ShopCollection;

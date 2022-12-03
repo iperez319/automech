@@ -14,11 +14,20 @@ export type Shop = {
   name: string;
   // address: string;
   location: {
-    type: string,
-    coordinates: [lng: number, lat: number]
-  }
+    type: string;
+    coordinates: [lng: number, lat: number];
+  };
   averageRatings: Map<string, number>; // TODO: Change after creating Service Model
   averagePrices: Map<string, number>; // TODO: Change after creating Service Model
+};
+
+export type ShopRequest = {
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  name: string;
+  googlePlaceId: string;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -29,29 +38,31 @@ const ShopSchema = new Schema<Shop>({
   googlePlaceId: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   location: {
     type: {
       type: String,
-      enum: ['Point'],
+      enum: ["Point"],
       required: true,
     },
     coordinates: {
       type: [Number],
       required: true,
     },
-    index: '2dsphere'
+    index: "2dsphere",
   },
   // address: String,
-  averageRatings: { // TODO: Change after creating Service Model
+  averageRatings: {
+    // TODO: Change after creating Service Model
     type: Map,
-    of: Number
+    of: Number,
   },
-  averagePrices: { // TODO: Change after creating Service Model
+  averagePrices: {
+    // TODO: Change after creating Service Model
     type: Map,
-    of: Number
-  }
+    of: Number,
+  },
 });
 
 const ShopModel = model<Shop>("Shop", ShopSchema);

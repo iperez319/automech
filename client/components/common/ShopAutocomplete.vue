@@ -32,7 +32,7 @@ export default {
         this.$emit("input", {
           coordinates: result.geometry.location.toJSON(),
           name: evt.structured_formatting.main_text,
-          place_id: evt.place_id
+          googlePlaceId: evt.place_id,
         });
       });
     },

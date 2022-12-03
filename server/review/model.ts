@@ -8,32 +8,32 @@ import { Schema, model } from "mongoose";
 
 // Type definition for User on the backend
 
-type Model = {
+export type Model = {
   model: string;
   make: string;
   year: number;
 };
 
-type Service = {
+export type Service = {
   title: string;
   price: string;
 };
 
 export type Review = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-  description: string;
+  name: string;
   services: Service; // TODO: Change this to array of Services (from service collection)
   rating: number;
   model: Model; // TODO: Change this to Model type
   shop: Types.ObjectId;
-  author: string; //Username of the one who made the review
+  author: Types.ObjectId;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
 // Users stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
 const ReviewSchema = new Schema<Review>({
-  description: String,
+  name: String,
   services: [{ // TODO: Might have to move this to its own model for easier querying
     title: String,
     price: Number
@@ -48,6 +48,10 @@ const ReviewSchema = new Schema<Review>({
     type: Schema.Types.ObjectId,
     ref: "Shop",
   },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  }
 });
 
 const ReviewModel = model<Review>("Review", ReviewSchema);
