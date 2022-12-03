@@ -1,37 +1,46 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import HomePage from './home.vue';
-import AccountPage from './components/Account/AccountPage.vue';
-import ReviewPage from './components/Review/ReviewPage.vue';
-import LoginPage from './components/Login/LoginPage.vue';
-import ComparePage from './components/Compare/ComparePage.vue'
-import NotFound from './NotFound.vue';
+import Vue from "vue";
+import VueRouter from "vue-router";
+import HomePage from "./home.vue";
+import AccountPage from "./components/Account/AccountPage.vue";
+import ReviewPage from "./components/Review/ReviewPage.vue";
+import LoginPage from "./components/Login/LoginPage.vue";
+import ExplorePage from "./components/Explore/ExplorePage.vue";
+import ComparePage from "./components/Compare/ComparePage.vue";
+import CompareResultsPage from "./components/Compare/CompareResultsPage.vue";
+import NotFound from "./NotFound.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
-  {path: '/', name: 'Home', component: HomePage},
-  {path: '/review', name: 'Review', component: ReviewPage},
-  {path: '/compare', name: 'Compare Page', component: ComparePage},
-  {path: '/account', name: 'Account', component: AccountPage},
-  {path: '/login', name: 'Login', component: LoginPage},
-  {path: '*', name: 'Not Found', component: NotFound}
+  { path: "/", name: "Home", component: HomePage },
+  { path: "/review", name: "Review", component: ReviewPage },
+  { path: "/explore", name: "Explore Page", component: ExplorePage },
+  {
+    path: "/compare/result",
+    name: "Compare Results Page",
+    component: CompareResultsPage,
+    props: true,
+  },
+  { path: "/compare", name: "Compare Page", component: ComparePage },
+  { path: "/account", name: "Account", component: AccountPage },
+  { path: "/login", name: "Login", component: LoginPage },
+  { path: "*", name: "Not Found", component: NotFound },
 ];
 
-const router = new VueRouter({routes});
+const router = new VueRouter({ routes });
 
 /**
  * Navigation guards to prevent user from accessing wrong pages.
  */
 router.beforeEach((to, from, next) => {
   if (router.app.$store) {
-    if (to.name === 'Login' && router.app.$store.state.username) {
-      next({name: 'Account'}); // Go to Account page if user navigates to Login and are signed in
+    if (to.name === "Login" && router.app.$store.state.username) {
+      next({ name: "Account" }); // Go to Account page if user navigates to Login and are signed in
       return;
     }
 
-    if (to.name === 'Account' && !router.app.$store.state.username) {
-      next({name: 'Login'}); // Go to Login page if user navigates to Account and are not signed in
+    if (to.name === "Account" && !router.app.$store.state.username) {
+      next({ name: "Login" }); // Go to Login page if user navigates to Account and are not signed in
       return;
     }
   }

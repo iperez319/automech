@@ -10,14 +10,24 @@ import { Schema, model } from "mongoose";
 
 export type Shop = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
+  googlePlaceId: string;
   name: string;
-  address: string;
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  },
+  // address: string;
+  location: {
+    type: string;
+    coordinates: [lng: number, lat: number];
+  };
   averageRatings: Map<string, number>; // TODO: Change after creating Service Model
   averagePrices: Map<string, number>; // TODO: Change after creating Service Model
+};
+
+export type ShopRequest = {
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  name: string;
+  googlePlaceId: string;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -25,20 +35,36 @@ export type Shop = {
 // type given by the type property, inside MongoDB
 const ShopSchema = new Schema<Shop>({
   name: String,
-  address: String,
-  coordinates: {
-    lat: Number,
-    lng: Number,
+  googlePlaceId: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  averageRatings: { // TODO: Change after creating Service Model
-    type: Map,
-    of: Number
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
   },
-  averagePrices: { // TODO: Change after creating Service Model
+  // address: String,
+  averageRatings: {
+    // TODO: Change after creating Service Model
     type: Map,
-    of: Number
-  }
+    of: Number,
+  },
+  averagePrices: {
+    // TODO: Change after creating Service Model
+    type: Map,
+    of: Number,
+  },
 });
+
+ShopSchema.index({ location: "2dsphere" });
 
 const ShopModel = model<Shop>("Shop", ShopSchema);
 export default ShopModel;
