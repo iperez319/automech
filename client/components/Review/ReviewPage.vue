@@ -13,7 +13,7 @@
     </section>
     <section>
     		<h2> Reviews</h2>
-    		<div v-for="datum in reviewList" :key="datum.id">oy <ReviewSummary /></div>
+    		<div v-for="datum in reviewList" :key="datum.id"> <p></p> <ReviewSummary :datum="datum" /></div>
     </section>
   </main>
 </template>
