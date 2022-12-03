@@ -6,8 +6,14 @@
     <label>Shop:</label>
     <b-input @input="shopValue = $event"/>
 
-    <label>Model:</label>
-    <b-input @input="modelValue = $event"/>
+    <label>Car:</label>
+    <div class="card">
+      <div class="card-body">
+        <div>Make: <b-input @input="makeValue = $event"/></div>
+        <div>Model: <b-input @input="modelValue = $event"/></div>
+        <div>Year: <b-input @input="yearValue = $event"/></div>
+      </div>
+    </div>
 
     <label>Services:</label>
     <multiselect 
@@ -25,11 +31,17 @@
       <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
     </multiselect>
 
+    <label v-if="servicesValue.length">Prices</label>
+    <div class="card" v-if="servicesValue.length">
+      <div class="card-body">
+        <div v-for="s in servicesValue">Price for <b>{{s.name}}</b>
+          <b-input @input="s.price=$event"/>
+        </div>
+      </div>
+    </div>
+
     <label>Rating:</label>
     <b-input @input="ratingValue = $event"/>
-
-    <label>Description:</label>
-    <b-input @input="descriptionValue = $event"/>
 
     <b-button
       variant="primary"
@@ -52,10 +64,11 @@ export default {
     return {
       value: [],
       shopValue: '',
+      makeValue: '',
       modelValue: '',
+      yearValue: '',
       servicesValue: [],
       ratingValue: '',
-      descriptionValue: '',
       serviceOptions: [
         { name: 'Oil Change'},
         { name: 'Tire Adjustment'},
@@ -69,12 +82,13 @@ export default {
   methods: {
     updateInput(value) {
       console.log(value);
-      this.servicesValue = value.map(entry => entry.name);
+      // this.servicesValue = value.map(entry => entry.name);
+      this.servicesValue = value;
       console.log(this.servicesValue);
     },
     async submit() {
       console.log('submit');
-      console.log(this.shopValue, this.modelValue, this.servicesValue, this.ratingValue, this.descriptionValue);
+      console.log(this.shopValue, this.makeValue, this.servicesValue, this.ratingValue, this.makeValue, this.modelValue, this.yearValue);
     }
   }
 }
