@@ -57,7 +57,7 @@ import { getShopsNearAddress } from "@/utils/stubs";
 import { Loader } from "@googlemaps/js-api-loader";
 
 export default {
-  name: "ComparePage",
+  name: "ExplorePage",
   components: { Multiselect, AddressAutocomplete, ShopListItem },
   data() {
     return {
