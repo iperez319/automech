@@ -5,6 +5,7 @@ import AccountPage from "./components/Account/AccountPage.vue";
 import ReviewPage from "./components/Review/ReviewPage.vue";
 import LoginPage from "./components/Login/LoginPage.vue";
 import ExplorePage from "./components/Explore/ExplorePage.vue";
+import ComparePage from "./components/Compare/ComparePage.vue";
 import NotFound from "./NotFound.vue";
 
 Vue.use(VueRouter);
@@ -13,6 +14,7 @@ const routes = [
   { path: "/", name: "Home", component: HomePage },
   { path: "/review", name: "Review", component: ReviewPage },
   { path: "/explore", name: "Explore Page", component: ExplorePage },
+  { path: "/compare", name: "Compare Page", component: ComparePage },
   { path: "/account", name: "Account", component: AccountPage },
   { path: "/login", name: "Login", component: LoginPage },
   { path: "*", name: "Not Found", component: NotFound },
