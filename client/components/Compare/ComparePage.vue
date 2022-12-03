@@ -87,6 +87,8 @@ export default {
         zoom: 15,
       });
 
+      // TODO: Add InfoWindow to show shop details in map
+
       const bounds = new google.maps.LatLngBounds();
 
       for (let shop of this.results) {
@@ -137,5 +139,13 @@ export default {
   gap: 10px;
   overflow: auto;
   height: 500px;
+}
+
+.multiselect__option--highlight {
+  background: #007bff;
+}
+
+.multiselect__option--highlight::after {
+  background: #007bff;
 }
 </style>
