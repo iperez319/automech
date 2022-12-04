@@ -89,9 +89,10 @@ export default {
     async submit() {
       console.log('submit');
       console.log(this.shopValue, this.makeValue, this.servicesValue, this.ratingValue, this.makeValue, this.modelValue, this.yearValue);
-      var res = await fetch('/api/reviews/',{
+      const options ={
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
+        credentials: 'same-origin',
         body: JSON.stringify({
           'services': this.servicesValue,
           'model': {
@@ -104,7 +105,9 @@ export default {
           },
           'rating': this.ratingValue
         })
-      })
+      }
+      console.log(options.body)
+      var res = await fetch('/api/reviews/',options)
     }
   },
   async created() {

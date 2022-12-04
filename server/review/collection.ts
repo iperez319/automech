@@ -26,7 +26,7 @@ class ReviewCollection {
       let newService = await ServiceCollection.addOne(
         service.name,
         service.price,
-        shop._id.toString(),
+        shop.name,
         author
       );
       serviceIds.push(newService._id.toString());
