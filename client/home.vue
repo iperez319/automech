@@ -10,6 +10,7 @@
     <section v-else>
       <header>
         <h2>Welcome to Automech!</h2>
+        
       </header>
       <article>
         <h3>
