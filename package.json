@@ -10,6 +10,7 @@
         "dev": "nodemon api/index.ts -e js,ts,json"
     },
     "dependencies": {
+        "@faker-js/faker": "^7.6.0",
         "@googlemaps/js-api-loader": "^1.15.1",
         "bootstrap": "^4.6.1",
         "bootstrap-vue": "^2.23.1",
