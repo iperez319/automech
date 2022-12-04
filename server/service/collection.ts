@@ -17,7 +17,8 @@ const getPercentile = (array: number[], percentile: number) => {
 class ServiceCollection {
   static async addOne(name: string, price: number, shop: string, user: string) {
     let newService = new ServiceModel({ name, price, shop, user });
-    return await newService.save();
+    await newService.save();
+    return newService;
   }
 
   static async getAveragePriceForShop(service: string, shop: string) {

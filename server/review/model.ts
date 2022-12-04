@@ -15,8 +15,8 @@ export type Model = {
 };
 
 export type Service = {
-  title: string;
-  price: string;
+  name: string;
+  price: number;
 };
 
 export type Review = {

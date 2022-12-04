@@ -12,7 +12,7 @@ export type Shop = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   googlePlaceId: string;
   name: string;
-  // address: string;
+  address: string;
   location: {
     type: string;
     coordinates: [lng: number, lat: number];
@@ -28,6 +28,7 @@ export type ShopRequest = {
   };
   name: string;
   googlePlaceId: string;
+  address: string;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -38,7 +39,6 @@ const ShopSchema = new Schema<Shop>({
   googlePlaceId: {
     type: String,
     required: true,
-    unique: true,
   },
   location: {
     type: {
@@ -51,7 +51,7 @@ const ShopSchema = new Schema<Shop>({
       required: true,
     },
   },
-  // address: String,
+  address: String,
   averageRatings: {
     // TODO: Change after creating Service Model
     type: Map,
