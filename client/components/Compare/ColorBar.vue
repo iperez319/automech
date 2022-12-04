@@ -1,6 +1,6 @@
 <!-- TODO: Fix pointer if time left -->
 <template>
-  <div class="bar-container">
+  <div class="bar-container" style="margin: auto">
     <div class="small-section green"></div>
     <div class="large-section yellow">
       <p class="divider-amount">${{ firstQuartile }}</p>
@@ -10,7 +10,7 @@
     </div>
     <div
       class="pointer"
-      :style="{ left: 'calc(' + progress + '%' + ' - 10px)' }"
+      :style="{ left: 'calc(' + costPercentile + '%' + ' - 10px)' }"
     ></div>
   </div>
 </template>
@@ -19,7 +19,7 @@
 export default {
   name: "ColorBar",
   props: {
-    progress: Number, // percentage
+    costPercentile: Number, // percentage
     firstQuartile: Number,
     thirdQuartile: Number,
   },

@@ -41,10 +41,10 @@ class ServiceCollection {
     // Get shops in a radius of the given location
     let shops = await ShopCollection.findShopsWithinRadiusOfLocation(
       location,
-      5
+      20
     );
 
-    if (!shops) return { error: "No data available" };
+    if (!shops) return { result: [] };
 
     let services_objs = await ServiceModel.find(
       {
@@ -62,16 +62,24 @@ class ServiceCollection {
 
     let service_groups = _.groupBy(services_objs, (s) => s.name);
 
-    let result = [];
+    let result: {
+      name: String;
+      firstQuartile: number;
+      secondQuartile: number;
+      thirdQuartile: number;
+    }[] = [];
 
     Object.keys(service_groups).forEach(function (key, index) {
       let currentArray = service_groups[key].map((s) => s.price); // Array should already be sorted
       result.push({
         name: key,
         firstQuartile: getPercentile(currentArray, 25),
+        secondQuartile: getPercentile(currentArray, 50),
         thirdQuartile: getPercentile(currentArray, 75),
       });
     });
+
+    return { result };
   }
 }
 

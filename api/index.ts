@@ -9,7 +9,8 @@ import dotenv from "dotenv";
 import * as userValidator from "../server/user/middleware";
 import { userRouter } from "../server/user/router";
 import { reviewRouter } from "../server/review/router";
-import { seederRouter } from '../server/seeder/router';
+import { seederRouter } from "../server/seeder/router";
+import { serviceRouter } from "../server/service/router";
 import MongoStore from "connect-mongo";
 
 // Load environmental variables
@@ -28,7 +29,7 @@ const client = mongoose
     return m.connection.getClient();
   })
   .catch((err) => {
-    console.log('not connected to mongo!');
+    console.log("not connected to mongo!");
     console.error(`Error connecting to MongoDB: ${err.message as string}`);
     throw new Error(err.message);
   });
@@ -76,6 +77,7 @@ app.use("/api/users", userRouter);
 app.use("/api/reviews", reviewRouter);
 // app.use("/api/shops", shopRouter);
 app.use("/api/seeder", seederRouter);
+app.use("/api/services", serviceRouter);
 
 // Catch all the other routes and display error message
 app.all("*", (req: Request, res: Response) => {
