@@ -38,12 +38,36 @@
         :options="['Distance', 'Rating']"
         style="width: fit-content"
       />
+    </section>
+    </section>
+      <div class="middle">
+        <GetShopsForm
+          ref="getShopsForm"
+          button="🔄 Get all shops"
+        />
+        <GetLocalShopsForm
+          ref="getLocalShopsForm"
+          button="🔄 Get local shops within your specified radius"
+        />
+      </div>
+
+      <section
+        v-if="$store.state.shops.length"
+      >
+        <ShopListItem
+          v-for="shop in $store.state.shops"
+          :key="shop.id"
+          :shop="shop"
+        />
+      </section>
+      <!--
       <div class="display">
         <div style="flex-shrink: 0" class="listContainer">
           <ShopListItem v-for="shop in results" :shop="shop" />
         </div>
         <div id="map"></div>
       </div>
+      /> -->
     </section>
   </main>
 </template>
@@ -52,13 +76,15 @@
 import Multiselect from "vue-multiselect";
 import AddressAutocomplete from "@/components/common/AddressAutocomplete.vue";
 import ShopListItem from "./ShopListItem.vue";
+import GetShopsForm from "./GetShopsForm.vue";
+import GetLocalShopsForm from "./GetLocalShopsForm.vue";
 import { services } from "@/utils/constants";
 import { getShopsNearAddress } from "@/utils/stubs";
 import { Loader } from "@googlemaps/js-api-loader";
 
 export default {
   name: "ExplorePage",
-  components: { Multiselect, AddressAutocomplete, ShopListItem },
+  components: { Multiselect, AddressAutocomplete, ShopListItem, GetShopsForm, GetLocalShopsForm },
   data() {
     return {
       addressSelected: null,

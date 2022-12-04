@@ -12,13 +12,15 @@ export type Shop = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   googlePlaceId: string;
   name: string;
-  address: string;
+  // address: string;
   location: {
     type: string;
     coordinates: [lng: number, lat: number];
   };
   averageRatings: Map<string, number>; // TODO: Change after creating Service Model
   averagePrices: Map<string, number>; // TODO: Change after creating Service Model
+  //serviceAveragePrices
+  //ratingAveragePrices
 };
 
 export type ShopRequest = {
@@ -39,6 +41,7 @@ const ShopSchema = new Schema<Shop>({
   googlePlaceId: {
     type: String,
     required: true,
+    unique: true,
   },
   location: {
     type: {
@@ -51,7 +54,7 @@ const ShopSchema = new Schema<Shop>({
       required: true,
     },
   },
-  address: String,
+  // address: String,
   averageRatings: {
     // TODO: Change after creating Service Model
     type: Map,
