@@ -75,32 +75,51 @@ export default {
     submitForm(evt) {
       evt.preventDefault();
       console.log("CLICKED");
-      this.results = [
-        ...getShopsNearAddress(10, {
-          lat: 42.3570416,
-          lng: -71.1017284,
-        }),
-      ];
 
-      let map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 42.3570416, lng: -71.1017284 },
-        zoom: 15,
-      });
+      const service = new google.maps.places.AutocompleteService();
 
-      // TODO: Add InfoWindow to show shop details in map
+      const userCoords = { lat: 42.3570416, lng: -71.1017284 }; // Hardcode to MIT if no permission given for test purposes
 
-      const bounds = new google.maps.LatLngBounds();
+      service.getPlacePredictions(
+        {
+          input: "q",
+          types: ["car_repair"],
+          //   location: new google.maps.LatLng(userCoords.lat, userCoords.lng), TODO: Not working when adding this parameter
+          origin: new google.maps.LatLng(userCoords.lat, userCoords.lng),
+          region: "us",
+        },
+        (preds, status) => {
+          console.log(status);
+          console.log(preds);
+        }
+      );
 
-      for (let shop of this.results) {
-        bounds.extend(shop.coordinates);
-        new google.maps.Marker({
-          position: shop.coordinates,
-          map: map,
-          title: shop.name,
-        });
-      }
+      // this.results = [
+      //   ...getShopsNearAddress(10, {
+      //     lat: 42.3570416,
+      //     lng: -71.1017284,
+      //   }),
+      // ];
 
-      map.fitBounds(bounds);
+      // let map = new google.maps.Map(document.getElementById("map"), {
+      //   center: { lat: 42.3570416, lng: -71.1017284 },
+      //   zoom: 15,
+      // });
+
+      // // TODO: Add InfoWindow to show shop details in map
+
+      // const bounds = new google.maps.LatLngBounds();
+
+      // for (let shop of this.results) {
+      //   bounds.extend(shop.coordinates);
+      //   new google.maps.Marker({
+      //     position: shop.coordinates,
+      //     map: map,
+      //     title: shop.name,
+      //   });
+      // }
+
+      // map.fitBounds(bounds);
     },
   },
   mounted() {

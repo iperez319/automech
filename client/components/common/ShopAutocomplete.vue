@@ -33,6 +33,7 @@ export default {
           coordinates: result.geometry.location.toJSON(),
           name: evt.structured_formatting.main_text,
           googlePlaceId: evt.place_id,
+          address: result.formatted_address,
         });
       });
     },

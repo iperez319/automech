@@ -15,7 +15,7 @@ const ServiceSchema = new Schema({
     required: true,
   },
   price: {
-    type: Schema.Types.ObjectId,
+    type: Number,
     required: true,
   },
   shop: {
@@ -26,8 +26,8 @@ const ServiceSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "User"
-  }
+    ref: "User",
+  },
 });
 
 const ServiceModel = model<Service>("Service", ServiceSchema);

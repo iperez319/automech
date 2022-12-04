@@ -12,11 +12,16 @@ class ShopCollection {
   static async addOneIfDoesNotExist(
     name: string,
     googlePlaceId: string,
-    coordinates: { lat: number; lng: number }
+    coordinates: { lat: number; lng: number },
+    address: string
   ): Promise<Shop> {
-    let currentShop = await ShopCollection.findByPlaceId(googlePlaceId)
+    if (!googlePlaceId) return null;
+
+    let currentShop = await ShopCollection.findByPlaceId(googlePlaceId);
     if (currentShop) return currentShop;
-    
+
+    console.log("Adding shop ", { name, googlePlaceId, coordinates, address });
+
     let newShop = new ShopModel({
       name,
       googlePlaceId,
@@ -24,13 +29,17 @@ class ShopCollection {
         type: "Point",
         coordinates: [coordinates.lng, coordinates.lat],
       },
+      address,
     });
 
-    return await newShop.save();
-}
+    await newShop.save();
+    return newShop;
+  }
 
   static async findByPlaceId(googlePlaceId: string) {
-    const shop = await ShopModel.findOne({ googlePlaceId });
+    const shop = await ShopModel.findOne({ googlePlaceId }, null, {
+      lean: true,
+    });
     return shop;
   }
 
