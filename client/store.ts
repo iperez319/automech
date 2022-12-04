@@ -50,6 +50,7 @@ const store = new Vuex.Store({
        * Request the server for the currently available shops.
        */
       const url = '/api/shops';
+      console.log('works', url);
       const res = await fetch(url).then(async r => r.json());
       state.shops = res;
     },

@@ -15,8 +15,8 @@ export default {
       this.value = ''; // Clear filter to show all local shops
       this.$store.commit('refreshLocalShops');
 
-      this.$set(this.alerts, e, 'error');
-      setTimeout(() => this.$delete(this.alerts, e), 3000);
+      //this.$set(this.alerts, e, 'error');
+      //setTimeout(() => this.$delete(this.alerts, e), 3000);
     }
   }
 };

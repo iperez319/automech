@@ -11,6 +11,8 @@ import { userRouter } from "../server/user/router";
 import { reviewRouter } from "../server/review/router";
 import { seederRouter } from "../server/seeder/router";
 import { serviceRouter } from "../server/service/router";
+import { shopRouter } from "../server/shop/router";
+
 import MongoStore from "connect-mongo";
 
 // Load environmental variables
@@ -75,7 +77,7 @@ app.use(userValidator.isCurrentSessionUserExists);
 // Add routers from routes folder
 app.use("/api/users", userRouter);
 app.use("/api/reviews", reviewRouter);
-// app.use("/api/shops", shopRouter);
+app.use("/api/shops", shopRouter);
 app.use("/api/seeder", seederRouter);
 app.use("/api/services", serviceRouter);
 
