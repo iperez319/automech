@@ -29,6 +29,11 @@ class ShopCollection {
     return await newShop.save();
 }
 
+  static async findAll() { //Just as dummy, I guess, in order to test the addReview form
+    const shops = await ShopModel.find();
+    return shops;
+  }
+
   static async findByPlaceId(googlePlaceId: string) {
     const shop = await ShopModel.findOne({ googlePlaceId });
     return shop;

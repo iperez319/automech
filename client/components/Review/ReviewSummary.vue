@@ -8,7 +8,6 @@
 	    	<b-list-group-item v-for="service in datum.services">{{service}}</b-list-group-item>
 	    </b-list-group>
 	    <p><h6 class="inline">Rating:</h6>{{datum.rating}}</p>
-	    <p><h6 class="inline">Description:</h6>{{datum.description}}</p>
 	  </div>
 	</div>
 </template>

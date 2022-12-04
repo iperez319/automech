@@ -90,6 +90,10 @@ export default {
       console.log('submit');
       console.log(this.shopValue, this.makeValue, this.servicesValue, this.ratingValue, this.makeValue, this.modelValue, this.yearValue);
     }
+  },
+  async created() {
+    console.log("CREATED!");
+    
   }
 }
 </script>
