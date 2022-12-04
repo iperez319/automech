@@ -13,20 +13,21 @@ class ReviewCollection {
     rating: number,
     author: string
   ) {
+    console.log("HERE");
     let shop = await ShopCollection.addOneIfDoesNotExist(
       name,
       googlePlaceId,
       coordinates,
       address
     );
-
+    console.log(shop);
     let serviceIds = [];
 
     for (let service of services) {
       let newService = await ServiceCollection.addOne(
         service.name,
         service.price,
-        shop.name,
+        shop._id.toString(),
         author
       );
       serviceIds.push(newService._id.toString());

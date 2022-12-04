@@ -2,21 +2,20 @@
 
 <template>
   <b-form @submit.prevent="submit">
-
     <label>Shop:</label>
-    <b-input @input="shopValue = $event"/>
+    <ShopAutocomplete v-model="shopValue" />
 
     <label>Car:</label>
     <div class="card">
       <div class="card-body">
-        <div>Make: <b-input @input="makeValue = $event"/></div>
-        <div>Model: <b-input @input="modelValue = $event"/></div>
-        <div>Year: <b-input @input="yearValue = $event"/></div>
+        <div>Make: <b-input @input="makeValue = $event" /></div>
+        <div>Model: <b-input @input="modelValue = $event" /></div>
+        <div>Year: <b-input @input="yearValue = $event" /></div>
       </div>
     </div>
 
     <label>Services:</label>
-    <multiselect 
+    <!-- <multiselect 
       v-model="value" 
       :options="serviceOptions" 
       :multiple="true" 
@@ -35,49 +34,73 @@
     <div class="card" v-if="servicesValue.length">
       <div class="card-body">
         <div v-for="s in servicesValue">Price for <b>{{s.name}}</b>
-          <b-input @input="s.price=$event"/>
+          <b-input v-model.number="s.price"/>
         </div>
       </div>
+    </div> -->
+
+    <div>
+      <div
+        class="service-input-group mb-2"
+        v-for="(service, index) in services"
+      >
+        <b-form-input
+          placeholder="Service Name"
+          class="service-input"
+          v-model="services[index].name"
+        />
+        <b-input-group prepend="$" class="service-input">
+          <b-form-input
+            placeholder="Price"
+            v-model.number="services[index].price"
+          />
+        </b-input-group>
+      </div>
+      <b-button @click="services.push({ name: '', price: 0 })" class="mb-2"
+        ><b-icon-plus /> Add Service</b-button
+      >
     </div>
 
     <label>Rating:</label>
-    <b-input @input="ratingValue = $event"/>
+    <b-form-rating
+      v-model.number="ratingValue"
+      class="mb-2"
+      show-value
+      show-value-max
+    ></b-form-rating>
 
-    <b-button
-      variant="primary"
-      type="submit"
-    >
-      Submit
-    </b-button>
+    <b-button variant="primary" type="submit"> Submit </b-button>
   </b-form>
 </template>
 
 <script>
 //Credit: https://vue-multiselect.js.org/#sub-multiple-select
-import Multiselect from 'vue-multiselect'
+import Multiselect from "vue-multiselect";
+import ShopAutocomplete from "../common/ShopAutocomplete.vue";
 
 export default {
   components: {
-    Multiselect
+    Multiselect,
+    ShopAutocomplete,
   },
-  data () {
+  data() {
     return {
       value: [],
-      shopValue: '',
-      makeValue: '',
-      modelValue: '',
-      yearValue: '',
-      servicesValue: [],
-      ratingValue: '',
+      shopValue: {},
+      makeValue: "",
+      modelValue: "",
+      yearValue: "",
+      services: [{ name: "", price: 0 }],
+      ratingValue: 1,
       serviceOptions: [
-        { name: 'Oil Change'},
-        { name: 'Tire Adjustment'},
-        { name: 'Spark Plug Replacement'},
-        { name: 'Replace Oxygen Sensor'},
-        { name: 'Tighten Fuel Cap'},
-        { name: 'Replace AC'  }
-      ]
-    }
+        { name: "Oil Change" },
+        { name: "Tire Adjustment" },
+        { name: "Spark Plug Replacement" },
+        { name: "Replace Oxygen Sensor" },
+        { name: "Tighten Fuel Cap" },
+        { name: "Replace AC" },
+      ],
+    };
   },
   methods: {
     updateInput(value) {
@@ -87,36 +110,39 @@ export default {
       console.log(this.servicesValue);
     },
     async submit() {
-      console.log('submit');
-      console.log(this.shopValue, this.makeValue, this.servicesValue, this.ratingValue, this.makeValue, this.modelValue, this.yearValue);
-      const options ={
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        credentials: 'same-origin',
+      console.log("submit");
+      console.log(
+        this.shopValue,
+        this.makeValue,
+        this.services,
+        this.ratingValue,
+        this.makeValue,
+        this.modelValue,
+        this.yearValue
+      );
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
         body: JSON.stringify({
-          'services': this.servicesValue,
-          'model': {
-            'make': this.makeValue,
-            'model': this.modelValue,
-            'year': this.yearValue
+          services: this.services,
+          model: {
+            make: this.makeValue,
+            model: this.modelValue,
+            year: this.yearValue,
           },
-          'shop': {
-            'name': this.shopValue
-          },
-          'rating': this.ratingValue
-        })
-      }
-      console.log(options.body)
-      var res = await fetch('/api/reviews/',options)
-    }
+          shop: this.shopValue,
+          rating: this.ratingValue,
+        }),
+      };
+      console.log(options.body);
+      var res = await fetch("/api/reviews/", options);
+    },
   },
   async created() {
     console.log("CREATED!");
-    
-  }
-}
+  },
+};
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
-
