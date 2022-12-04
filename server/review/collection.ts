@@ -4,6 +4,7 @@ import type { ShopRequest } from "../shop/model";
 import type { Model, Service } from "./model";
 import ServiceCollection from "../service/collection";
 import { componentsPlugin } from "bootstrap-vue";
+import { Types } from "mongoose";
 
 class ReviewCollection {
   static async addOne(
@@ -21,12 +22,12 @@ class ReviewCollection {
     );
 
     let serviceIds = [];
-
+    console.log(shop);
     for (let service of services) {
       let newService = await ServiceCollection.addOne(
         service.name,
         service.price,
-        shop.name,
+        shop._id.toString(),
         author
       );
       serviceIds.push(newService._id.toString());
@@ -44,6 +45,19 @@ class ReviewCollection {
 
     await newReview.save();
     return newReview;
+  }
+  //Get all Reviews in the database, or find by shopId, or find by shopname
+  static async findAllReviews(shopNameorId?: Types.ObjectId | string){
+    if (shopNameorId){
+      return ReviewModel.find({
+        $or:[
+          {_id: shopNameorId},
+          {name: shopNameorId}
+        ]}).sort({dateModified: -1})
+    } else{
+      return ReviewModel.find().sort({dateModified: -1})
+    }
+
   }
 }
 
