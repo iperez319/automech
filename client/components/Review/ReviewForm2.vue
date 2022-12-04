@@ -3,8 +3,11 @@
 <template>
   <b-form @submit.prevent="submit">
 
-    <label>Shop:</label>
+<!--     <label>Shop OLD INPUT:</label>
     <b-input @input="shopValue = $event"/>
+ -->
+    <label>Shop:</label>
+    <ShopAutocomplete v-model="shopValue"/>
 
     <label>Car:</label>
     <div class="card">
@@ -55,10 +58,12 @@
 <script>
 //Credit: https://vue-multiselect.js.org/#sub-multiple-select
 import Multiselect from 'vue-multiselect'
+import ShopAutocomplete from '../common/ShopAutocomplete.vue';
 
 export default {
   components: {
-    Multiselect
+    Multiselect,
+    ShopAutocomplete,
   },
   data () {
     return {
@@ -100,14 +105,13 @@ export default {
             'model': this.modelValue,
             'year': this.yearValue
           },
-          'shop': {
-            'name': this.shopValue
-          },
+          'shop': shopValue,
           'rating': this.ratingValue
         })
       }
       console.log(options.body)
-      var res = await fetch('/api/reviews/',options)
+
+      // var res = await fetch('/api/reviews/',options)
     }
   },
   async created() {
