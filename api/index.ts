@@ -28,6 +28,7 @@ const client = mongoose
     return m.connection.getClient();
   })
   .catch((err) => {
+    console.log('not connected to mongo!');
     console.error(`Error connecting to MongoDB: ${err.message as string}`);
     throw new Error(err.message);
   });
@@ -73,6 +74,7 @@ app.use(userValidator.isCurrentSessionUserExists);
 // Add routers from routes folder
 app.use("/api/users", userRouter);
 app.use("/api/reviews", reviewRouter);
+// app.use("/api/shops", shopRouter);
 app.use("/api/seeder", seederRouter);
 
 // Catch all the other routes and display error message
