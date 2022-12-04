@@ -37,6 +37,7 @@ class ShopCollection {
   }
 
   static async findAll() { //Just as dummy, I guess, in order to test the addReview form
+    console.log('OOOOO');
     const shops = await ShopModel.find();
     return shops;
   }
