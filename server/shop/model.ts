@@ -19,6 +19,8 @@ export type Shop = {
   };
   averageRatings: Map<string, number>; // TODO: Change after creating Service Model
   averagePrices: Map<string, number>; // TODO: Change after creating Service Model
+  //serviceAveragePrices
+  //ratingAveragePrices
 };
 
 export type ShopRequest = {
@@ -39,6 +41,7 @@ const ShopSchema = new Schema<Shop>({
   googlePlaceId: {
     type: String,
     required: true,
+    unique: true,
   },
   location: {
     type: {
