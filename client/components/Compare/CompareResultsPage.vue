@@ -1,10 +1,17 @@
 <template>
-  <b-container>
+  <b-container
+    v-if="firstQuartile && thirdQuartile && percentile"
+    class="text-center"
+  >
     <h4>
-      <span class="cost">$500</span> for oil change, and wiper blade replacement
-      is too expensive for your area
+      <span class="cost">${{ totalCost }}</span> for {{ serviceNames }} is
+      {{ priceRange }} for your area
     </h4>
-    <ColorBar firstQuartile="50.00" thirdQuartile="100.00" progress="75" />
+    <ColorBar
+      :firstQuartile="firstQuartile"
+      :thirdQuartile="thirdQuartile"
+      :costPercentile="percentile"
+    />
   </b-container>
 </template>
 
@@ -13,6 +20,61 @@ import ColorBar from "./ColorBar.vue";
 export default {
   name: "CompareResultsPage",
   components: { ColorBar },
+  data() {
+    return { firstQuartile: null, thirdQuartile: null, percentile: null };
+  },
+  props: ["shop", "services", "car"],
+  computed: {
+    totalCost() {
+      return (this.services ?? []).reduce((a, b) => a + b.price, 0);
+    },
+    serviceNames() {
+      let names = (this.services ?? []).map((s) => s.name);
+      if (names.length <= 1) return names[0];
+      return names.slice(0, -1).join(", ") + ", and" + names.slice(-1)[0];
+    },
+    priceRange() {
+      const totalCost = (this.services ?? []).reduce((a, b) => a + b.price, 0);
+      if (totalCost <= this.firstQuartile) {
+        return "cheap";
+      } else if (
+        totalCost > this.firstQuartile &&
+        totalCost <= this.thirdQuartile
+      ) {
+        return "typical";
+      } else {
+        return "too expensive";
+      }
+    },
+  },
+  async mounted() {
+    if (!this.shop || !this.services || !this.car) {
+      this.$router.push("/compare");
+      return;
+    }
+
+    const shop = JSON.parse(JSON.stringify(this.shop)); // Solves weird issue no time to look into
+    const services = JSON.parse(JSON.stringify(this.services));
+    const car = this.car;
+
+    const url = "/api/services/compare";
+    const req = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify({ shop, services, car }),
+      headers: { "Content-Type": "application/json" },
+    });
+    const req_obj = await req.json();
+
+    if (req.status == 400) {
+      alert("Sorry no data available for these services in this area");
+    } else {
+      console.log(req_obj);
+      const { firstQuartile, thirdQuartile, percentile } = req_obj;
+      this.firstQuartile = firstQuartile;
+      this.thirdQuartile = thirdQuartile;
+      this.percentile = percentile;
+    }
+  },
 };
 </script>
 

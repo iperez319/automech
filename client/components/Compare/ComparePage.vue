@@ -5,7 +5,7 @@
       <ShopAutocomplete v-model="shopSelected" />
 
       <label>Car:</label>
-      <b-input @input="modelValue = $event" placeholder="Year Make Model" />
+      <b-input @input="car = $event" placeholder="Year Make Model" />
 
       <label>Services:</label>
       <div>
@@ -17,32 +17,62 @@
           />
           <b-input-group prepend="$" class="service-input">
             <b-form-input
-              placeholder="Amount"
-              v-model.number="services[index].amount"
+              placeholder="Price"
+              v-model.number="services[index].price"
             />
           </b-input-group>
         </div>
-        <b-button @click="services.push({ name: '', amount: 0 })"
+        <b-button @click="services.push({ name: '', price: 0 })"
           ><b-icon-plus /> Add Service</b-button
         >
       </div>
 
-      <b-button variant="primary" type="submit"> Submit </b-button>
+      <b-button variant="primary" type="submit" @click="handleSubmit">
+        Submit
+      </b-button>
     </b-form>
   </main>
 </template>
 
 <script>
 import ShopAutocomplete from "@/components/common/ShopAutocomplete.vue";
+import { Loader } from "@googlemaps/js-api-loader";
 
 export default {
   name: "ComparePage",
   components: { ShopAutocomplete },
   data() {
     return {
-      services: [{ name: "", amount: 0 }],
+      services: [{ name: "", price: 0 }],
       shopSelected: null,
+      car: "",
     };
+  },
+  methods: {
+    handleSubmit() {
+      this.$router.push({
+        name: "Compare Results Page",
+        params: {
+          services: this.services,
+          shop: this.shopSelected,
+          car: this.car,
+        },
+      });
+    },
+  },
+  mounted() {
+    const loader = new Loader({
+      apiKey: "AIzaSyBDEqPqGsjpE-nVKMnMvvblsXpZbS7ZK_w",
+      libraries: ["places"],
+    });
+
+    loader.loadCallback((e) => {
+      if (e) console.log(e);
+      else {
+        console.log("LOADED");
+        this.loaded = true;
+      }
+    });
   },
 };
 </script>
