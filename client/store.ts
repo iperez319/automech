@@ -10,7 +10,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     filter: null, // Username to filter shown freets by (null = show all)
-    freets: [], // All freets created in the app
+    shops: [], // All freets created in the app
     username: null, // Username of the logged in user
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
@@ -38,20 +38,28 @@ const store = new Vuex.Store({
        */
       state.filter = filter;
     },
-    updateFreets(state, freets) {
+    updateShops(state, shops) {
       /**
        * Update the stored freets to the provided freets.
        * @param freets - Freets to store
        */
-      state.freets = freets;
+      state.shops = shops;
     },
-    async refreshFreets(state) {
+    async refreshShops(state) {
       /**
-       * Request the server for the currently available freets.
+       * Request the server for the currently available shops.
        */
-      const url = state.filter ? `/api/users/${state.filter}/freets` : '/api/freets';
+      const url = '/api/shops';
       const res = await fetch(url).then(async r => r.json());
-      state.freets = res;
+      state.shops = res;
+    },
+    async refreshLocalShops(state) {
+      /**
+       * Request the server for the currently available local shops.
+       */
+      const url = '/api/shops/:local';
+      const res = await fetch(url).then(async r => r.json());
+      state.shops = res;
     }
   },
   // Store data across page refreshes, only discard on browser close

@@ -48,6 +48,10 @@ class ShopCollection {
     return shop;
   }
 
+  static async findByName(name: string): Promise<Shop> {
+    return ShopModel.findOne({name: new RegExp(`^${name?.trim()}$`, 'i')});
+  }
+
   static async findShopsWithinRadiusOfLocation(
     location: {
       lat: number;
