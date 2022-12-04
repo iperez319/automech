@@ -76,50 +76,32 @@ export default {
       evt.preventDefault();
       console.log("CLICKED");
 
-      const service = new google.maps.places.AutocompleteService();
+      this.results = [
+        ...getShopsNearAddress(10, {
+          lat: 42.3570416,
+          lng: -71.1017284,
+        }),
+      ];
 
-      const userCoords = { lat: 42.3570416, lng: -71.1017284 }; // Hardcode to MIT if no permission given for test purposes
+      let map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 42.3570416, lng: -71.1017284 },
+        zoom: 15,
+      });
 
-      service.getPlacePredictions(
-        {
-          input: "q",
-          types: ["car_repair"],
-          //   location: new google.maps.LatLng(userCoords.lat, userCoords.lng), TODO: Not working when adding this parameter
-          origin: new google.maps.LatLng(userCoords.lat, userCoords.lng),
-          region: "us",
-        },
-        (preds, status) => {
-          console.log(status);
-          console.log(preds);
-        }
-      );
+      // TODO: Add InfoWindow to show shop details in map
 
-      // this.results = [
-      //   ...getShopsNearAddress(10, {
-      //     lat: 42.3570416,
-      //     lng: -71.1017284,
-      //   }),
-      // ];
+      const bounds = new google.maps.LatLngBounds();
 
-      // let map = new google.maps.Map(document.getElementById("map"), {
-      //   center: { lat: 42.3570416, lng: -71.1017284 },
-      //   zoom: 15,
-      // });
+      for (let shop of this.results) {
+        bounds.extend(shop.coordinates);
+        new google.maps.Marker({
+          position: shop.coordinates,
+          map: map,
+          title: shop.name,
+        });
+      }
 
-      // // TODO: Add InfoWindow to show shop details in map
-
-      // const bounds = new google.maps.LatLngBounds();
-
-      // for (let shop of this.results) {
-      //   bounds.extend(shop.coordinates);
-      //   new google.maps.Marker({
-      //     position: shop.coordinates,
-      //     map: map,
-      //     title: shop.name,
-      //   });
-      // }
-
-      // map.fitBounds(bounds);
+      map.fitBounds(bounds);
     },
   },
   mounted() {
