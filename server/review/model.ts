@@ -22,7 +22,7 @@ export type Service = {
 export type Review = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   name: string;
-  services: Service; // TODO: Change this to array of Services (from service collection)
+  services: Types.ObjectId[]; // TODO: Change this to array of Services (from service collection)
   rating: number;
   model: Model; // TODO: Change this to Model type
   shop: Types.ObjectId;
@@ -34,15 +34,22 @@ export type Review = {
 // type given by the type property, inside MongoDB
 const ReviewSchema = new Schema<Review>({
   name: String,
-  services: [{ // TODO: Might have to move this to its own model for easier querying
-    title: String,
-    price: Number
-  }],
+  //   services: [{ // TODO: Might have to move this to its own model for easier querying
+  //     title: String,
+  //     price: Number
+  //   }],
+  services: [
+    {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Service",
+    },
+  ],
   rating: Number,
   model: {
     make: String,
     model: String,
-    year: Number
+    year: Number,
   },
   shop: {
     type: Schema.Types.ObjectId,
@@ -51,7 +58,7 @@ const ReviewSchema = new Schema<Review>({
   author: {
     type: Schema.Types.ObjectId,
     ref: "User",
-  }
+  },
 });
 
 const ReviewModel = model<Review>("Review", ReviewSchema);
