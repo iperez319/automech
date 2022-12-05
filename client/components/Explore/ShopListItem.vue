@@ -3,6 +3,7 @@
     <div>
       <div class="header">
         <h4>{{ shop.name }}</h4>
+        <br />
         <b-form-rating
           inline
           no-border
@@ -11,13 +12,9 @@
         />
       </div>
       <div>
-        <div class="service">
-          <b-badge style="font-size: 14px">Blinker Fluid Refill</b-badge>
-          <p>Avg. Cost: $109</p>
-        </div>
-        <div class="service">
-          <b-badge style="font-size: 14px">Brake Work</b-badge>
-          <p>Avg. Cost: $200</p>
+        <div class="service" v-for="service in shop.averagePrices">
+          <b-badge style="font-size: 14px">{{ service.name }}</b-badge>
+          <p>Avg. Cost: ${{ service.averagePrice }}</p>
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ class ServiceCollection {
     for (let service of services) {
       sum += service.price;
     }
-    return sum / service.length;
+    return sum / services.length;
   }
 
   static async getQuartilesForLocation(

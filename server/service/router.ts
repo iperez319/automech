@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Request, Response } from "express";
 import ServiceCollection from "./collection";
 import express from "express";

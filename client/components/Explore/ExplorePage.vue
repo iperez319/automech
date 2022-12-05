@@ -1,5 +1,5 @@
 <template>
-  <main class="container">
+  <main>
     <section>
       <b-form>
         <label for="address">Address:</label>
@@ -8,10 +8,18 @@
           :value="shopvalue"
           @input="shopvalue = $event.target"
         /> -->
-        <AddressAutocomplete v-model="addressSelected" />
+        <b-row>
+          <b-col cols="10"
+            ><AddressAutocomplete v-model="addressSelected"
+          /></b-col>
+          <b-col
+            ><b-form-select v-model="radius" :options="options"></b-form-select
+          ></b-col>
+        </b-row>
+
         <label for="services">Services:</label>
         <multiselect
-          v-model="value"
+          v-model="selectedServices"
           :options="serviceOptions"
           :multiple="true"
           :close-on-select="false"
@@ -26,21 +34,26 @@
         </multiselect>
         <label for="car">Car:</label>
         <b-input placeholder="Year Make Model" id="car" />
-        <b-button variant="primary" type="submit" @click="submitForm">
+        <b-button
+          variant="primary"
+          type="submit"
+          @click="submitForm"
+          class="mt-2 mb-2"
+        >
           Submit
         </b-button>
       </b-form>
     </section>
-    <section>
-      <h3>Shops near 229 Vassar St.</h3>
+    <section v-if="results">
+      <h3>Shops near {{ addressSelected.name }}</h3>
       <b-form-select
         v-model="sortBy"
         :options="['Distance', 'Rating']"
         style="width: fit-content"
       />
-    </section>
-    </section>
-      <div class="middle">
+      <!-- </section>
+    </section> -->
+      <!-- <div class="middle">
         <GetShopsForm
           ref="getShopsForm"
           button="🔄 Get all shops"
@@ -49,9 +62,9 @@
           ref="getLocalShopsForm"
           button="🔄 Get local shops within your specified radius"
         />
-      </div>
+      </div> -->
 
-      <section
+      <!-- <section
         v-if="$store.state.shops.length"
       >
         <ShopListItem
@@ -59,15 +72,14 @@
           :key="shop.id"
           :shop="shop"
         />
-      </section>
-      <!--
+      </section> -->
+
       <div class="display">
         <div style="flex-shrink: 0" class="listContainer">
           <ShopListItem v-for="shop in results" :shop="shop" />
         </div>
-        <div id="map"></div>
+        <div id="map" v-b-visible="mapIsVisibleHandler"></div>
       </div>
-      /> -->
     </section>
   </main>
 </template>
@@ -84,50 +96,85 @@ import { Loader } from "@googlemaps/js-api-loader";
 
 export default {
   name: "ExplorePage",
-  components: { Multiselect, AddressAutocomplete, ShopListItem, GetShopsForm, GetLocalShopsForm },
+  components: {
+    Multiselect,
+    AddressAutocomplete,
+    ShopListItem,
+    GetShopsForm,
+    GetLocalShopsForm,
+  },
   data() {
     return {
       addressSelected: null,
-      value: [],
+      selectedServices: [],
       serviceOptions: services,
       results: null,
+      radius: 5,
       sortBy: "Distance",
+      options: [
+        { value: 5, text: "5 mi" },
+        { value: 10, text: "10 mi" },
+        { value: 15, text: "15 mi" },
+        { value: 20, text: "20 mi" },
+      ],
     };
   },
   methods: {
     updateInput(value) {
       console.log(value);
     },
-    submitForm(evt) {
+    mapIsVisibleHandler(isVisible) {
+      if (isVisible && this.results) {
+        let map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 42.3570416, lng: -71.1017284 },
+          zoom: 15,
+        });
+
+        // TODO: Add InfoWindow to show shop details in map
+
+        const bounds = new google.maps.LatLngBounds();
+
+        for (let shop of this.results) {
+          bounds.extend(shop.coordinates);
+          const marker = new google.maps.Marker({
+            position: shop.coordinates,
+            map: map,
+            title: shop.name,
+          });
+
+          const infowindow = new google.maps.InfoWindow({
+            content: `<h4>${shop.name}</h4>`,
+            ariaLabel: shop.name,
+          });
+
+          marker.addListener("click", () => {
+            infowindow.open({
+              anchor: marker,
+              map,
+            });
+          });
+        }
+
+        map.fitBounds(bounds);
+      }
+    },
+    async submitForm(evt) {
       evt.preventDefault();
       console.log("CLICKED");
 
-      this.results = [
-        ...getShopsNearAddress(10, {
-          lat: 42.3570416,
-          lng: -71.1017284,
+      const options = {
+        method: "POST",
+        body: JSON.stringify({
+          location: this.addressSelected?.coordinates,
+          radius: this.radius,
+          services: this.selectedServices,
         }),
-      ];
+        headers: { "Content-Type": "application/json" },
+      };
+      const req = await fetch("/api/shops/local", options);
+      const req_obj = await req.json();
 
-      let map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 42.3570416, lng: -71.1017284 },
-        zoom: 15,
-      });
-
-      // TODO: Add InfoWindow to show shop details in map
-
-      const bounds = new google.maps.LatLngBounds();
-
-      for (let shop of this.results) {
-        bounds.extend(shop.coordinates);
-        new google.maps.Marker({
-          position: shop.coordinates,
-          map: map,
-          title: shop.name,
-        });
-      }
-
-      map.fitBounds(bounds);
+      this.results = req_obj;
     },
   },
   mounted() {

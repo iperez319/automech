@@ -2,7 +2,10 @@ import type { Request, Response } from "express";
 import ShopCollection from "./collection";
 import * as userValidator from "../user/middleware";
 import express from "express";
-import transformShopResponse from "./util";
+import {
+  transformShopResponse,
+  transformShopResponseWithServicePrices,
+} from "./util";
 
 const router = express.Router();
 
@@ -26,16 +29,22 @@ router.get("/", async (req: Request, res: Response) => {
  *
  * @return - all shops within radius, physical proximity
  */
-router.post("/:local", async (req: Request, res: Response) => {
-  const { location, radius } = req.body;
+router.post("/local", async (req: Request, res: Response) => {
+  const { location, radius, services } = req.body;
   const allLocalShops = await ShopCollection.findShopsWithinRadiusOfLocation(
     location,
     radius
   );
 
-  let response = allLocalShops.map((shop) => transformShopResponse(shop));
-  console.log(allLocalShops.length);
-  res.status(200).json(response);
+  if (!services) {
+    let response = allLocalShops.map((shop) => transformShopResponse(shop));
+    res.status(200).json(response);
+  } else {
+    let response = allLocalShops.map((shop) =>
+      transformShopResponseWithServicePrices(shop, services)
+    );
+    res.status(200).json(response);
+  }
 });
 
 export { router as shopRouter };
