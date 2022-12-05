@@ -1,5 +1,9 @@
 # Automech
 
+## Testing Instruction
+
+When prompted to input shops only local shops such as "Good News Garage" have been populated with data so please test with those.
+
 ## API Routes
 
 ### Users
