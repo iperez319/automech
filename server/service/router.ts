@@ -9,26 +9,26 @@ const router = express.Router();
 
 function getPercentile(value: number, q1: number, q2: number, q3: number) {
   // Check if the value is less than the first quartile
-  if (value < q1) {
+  if (value <= q1) {
     // The percentile is the lower bound of the first quartile
     return Math.floor((25 * value) / q1);
   }
 
   // Check if the value is less than the second quartile
-  if (value < q2) {
+  if (value <= q2) {
     // The percentile is the upper bound of the first quartile
     return Math.ceil(25 + ((50 - 25) * (value - q1)) / (q2 - q1));
   }
 
   // Check if the value is less than the third quartile
-  if (value < q3) {
+  if (value <= q3) {
     // The percentile is the upper bound of the second quartile
     return Math.ceil(50 + ((75 - 50) * (value - q2)) / (q3 - q2));
   }
 
   // The value is greater than or equal to the third quartile
   // The percentile is the upper bound of the third quartile
-  Math.ceil((100 * value) / q3);
+  return Math.ceil((100 * value) / q3);
 }
 
 router.post("/compare", async (req: Request, res: Response) => {
@@ -55,15 +55,23 @@ router.post("/compare", async (req: Request, res: Response) => {
   const totalFirstQuartile = result.reduce((a, b) => a + b.firstQuartile, 0);
   const totalSecondQuartile = result.reduce((a, b) => a + b.secondQuartile, 0);
   const totalThirdQuartile = result.reduce((a, b) => a + b.thirdQuartile, 0);
+  console.log("HERE", {
+    totalCost,
+    totalFirstQuartile,
+    totalSecondQuartile,
+    totalThirdQuartile,
+  });
   let percentile = getPercentile(
     totalCost,
     totalFirstQuartile,
     totalSecondQuartile,
     totalThirdQuartile
   );
-
+  console.log(percentile);
   if (percentile < 0) percentile = 0;
   else if (percentile > 100) percentile = 100;
+
+  console.log(percentile);
 
   res.status(200).json({
     firstQuartile: totalFirstQuartile,

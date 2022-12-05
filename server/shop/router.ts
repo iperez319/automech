@@ -1,7 +1,8 @@
-import type {Request, Response} from 'express';
-import ShopCollection from './collection';
-import * as userValidator from '../user/middleware';
-import express from 'express';
+import type { Request, Response } from "express";
+import ShopCollection from "./collection";
+import * as userValidator from "../user/middleware";
+import express from "express";
+import transformShopResponse from "./util";
 
 const router = express.Router();
 
@@ -11,13 +12,13 @@ const router = express.Router();
  *
  * @return - all shops
  */
-router.get(
-  '/',
-  async (req: Request, res: Response) => {
-    const allShops = await ShopCollection.findAll();
-    res.status(200).json(allShops);
-  }
-);
+router.get("/", async (req: Request, res: Response) => {
+  const allShops = await ShopCollection.findAll();
+  let response = allShops.map((shop) => transformShopResponse(shop));
+
+  console.log(JSON.parse(JSON.stringify(response[0])));
+  res.status(200).json(response);
+});
 
 /**
  * Get all shops within radius, physical proximity
@@ -25,15 +26,16 @@ router.get(
  *
  * @return - all shops within radius, physical proximity
  */
-router.post(
-  '/:local',
-  async (req: Request, res: Response) => {
-  	console.log(req);
-    const {location, radius} = req.body;
-    console.log('HELLO?', req.body);
-    const allLocalShops = await ShopCollection.findShopsWithinRadiusOfLocation(location, radius);
-    res.status(200).json(allLocalShops);
-  }
-);
+router.post("/:local", async (req: Request, res: Response) => {
+  const { location, radius } = req.body;
+  const allLocalShops = await ShopCollection.findShopsWithinRadiusOfLocation(
+    location,
+    radius
+  );
 
-export {router as shopRouter};
+  let response = allLocalShops.map((shop) => transformShopResponse(shop));
+  console.log(allLocalShops.length);
+  res.status(200).json(response);
+});
+
+export { router as shopRouter };

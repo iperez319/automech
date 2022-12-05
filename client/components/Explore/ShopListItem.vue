@@ -3,7 +3,12 @@
     <div>
       <div class="header">
         <h4>{{ shop.name }}</h4>
-        <b-form-rating inline no-border :value="shop.rating" readonly />
+        <b-form-rating
+          inline
+          no-border
+          :value="shop.averageRating ?? 3"
+          readonly
+        />
       </div>
       <div>
         <div class="service">

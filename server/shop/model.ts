@@ -17,8 +17,8 @@ export type Shop = {
     type: string;
     coordinates: [lng: number, lat: number];
   };
-  averageRatings: Map<string, number>; // TODO: Change after creating Service Model
-  averagePrices: Map<string, number>; // TODO: Change after creating Service Model
+  // averageRatings: Map<string, number>; // TODO: Change after creating Service Model
+  // averagePrices: Map<string, number>; // TODO: Change after creating Service Model
   //serviceAveragePrices
   //ratingAveragePrices
 };
@@ -33,37 +33,48 @@ export type ShopRequest = {
   address: string;
 };
 
+const opts = {
+  toObject: { virtuals: true, versionKey: false },
+  toJSON: { virtuals: true, versionKey: false },
+  strictPopulate: false,
+};
+
 // Mongoose schema definition for interfacing with a MongoDB table
 // Users stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
-const ShopSchema = new Schema<Shop>({
-  name: String,
-  googlePlaceId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  location: {
-    type: {
+const ShopSchema = new Schema<Shop>(
+  {
+    name: String,
+    googlePlaceId: {
       type: String,
-      enum: ["Point"],
       required: true,
+      unique: true,
     },
-    coordinates: {
-      type: [Number],
-      required: true,
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        required: true,
+      },
+      coordinates: {
+        type: [Number],
+        required: true,
+      },
     },
+    address: String,
   },
-  address: String,
-  averageRatings: {
-    // TODO: Change after creating Service Model
-    type: Map,
-    of: Number,
-  },
-  averagePrices: {
-    // TODO: Change after creating Service Model
-    type: Map,
-    of: Number,
+  opts
+);
+
+ShopSchema.virtual("ratings", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "shop",
+  justOne: false,
+  options: {
+    select: {
+      rating: { $avg: "$rating" },
+    },
   },
 });
 
