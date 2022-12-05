@@ -66,7 +66,7 @@ const ShopSchema = new Schema<Shop>(
   opts
 );
 
-ShopSchema.virtual("averageRatings", {
+ShopSchema.virtual("ratings", {
   ref: "Review",
   localField: "_id",
   foreignField: "shop",

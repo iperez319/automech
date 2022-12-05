@@ -39,7 +39,7 @@ class ShopCollection {
   static async findAll() {
     //Just as dummy, I guess, in order to test the addReview form
     console.log("OOOOO");
-    const shops = await ShopModel.find();
+    const shops = await ShopModel.find().populate("ratings");
     return shops;
   }
 
@@ -71,7 +71,10 @@ class ShopCollection {
           $maxDistance: radius * 1609, // Convert from mi to meters
         },
       },
-    });
+    }).populate('ratings');
+
+    
+
     return shops;
   }
 }
