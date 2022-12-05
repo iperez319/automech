@@ -36,8 +36,9 @@ class ShopCollection {
     return newShop;
   }
 
-  static async findAll() { //Just as dummy, I guess, in order to test the addReview form
-    console.log('OOOOO');
+  static async findAll() {
+    //Just as dummy, I guess, in order to test the addReview form
+    console.log("OOOOO");
     const shops = await ShopModel.find();
     return shops;
   }
@@ -50,7 +51,7 @@ class ShopCollection {
   }
 
   static async findByName(name: string): Promise<Shop> {
-    return ShopModel.findOne({name: new RegExp(`^${name?.trim()}$`, 'i')});
+    return ShopModel.findOne({ name: new RegExp(`^${name?.trim()}$`, "i") });
   }
 
   static async findShopsWithinRadiusOfLocation(
@@ -65,7 +66,7 @@ class ShopCollection {
         $near: {
           $geometry: {
             type: "Point",
-            coordinates: [location.lat, location.lng],
+            coordinates: [location.lng, location.lat],
           },
           $maxDistance: radius * 1609, // Convert from mi to meters
         },
