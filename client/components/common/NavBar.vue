@@ -51,8 +51,7 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-item to="/">Home</b-nav-item>
-        <b-nav-item to="/explore">Explore</b-nav-item>
+        <b-nav-item to="/explore">Home</b-nav-item>
         <b-nav-item to="/review">Review</b-nav-item>
         <b-nav-item
           v-if="$store.state.username"
