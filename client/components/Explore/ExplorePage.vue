@@ -1,5 +1,7 @@
 <template>
   <main class="container">
+    <p></p>
+    <h4>Discover Mechanic Shops In Your Area</h4>
     <section>
       <b-form>
         <label for="address">Address:</label>
@@ -31,6 +33,7 @@
         </b-button>
       </b-form>
     </section>
+    <p></p>
     <section>
       <h3>Shops near 229 Vassar St.</h3>
       <b-form-select
