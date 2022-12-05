@@ -14,13 +14,14 @@ class ReviewCollection {
     rating: number,
     author: string
   ) {
+    console.log("HERE");
     let shop = await ShopCollection.addOneIfDoesNotExist(
       name,
       googlePlaceId,
       coordinates,
       address
     );
-
+    console.log(shop);
     let serviceIds = [];
     console.log(shop);
     for (let service of services) {

@@ -44,6 +44,8 @@ class ServiceCollection {
       20
     );
 
+    console.log(shops.length);
+
     if (!shops) return { result: [] };
 
     let services_objs = await ServiceModel.find(
@@ -61,6 +63,8 @@ class ServiceCollection {
     );
 
     let service_groups = _.groupBy(services_objs, (s) => s.name);
+
+    console.log(service_groups);
 
     let result: {
       name: String;
