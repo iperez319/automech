@@ -51,7 +51,8 @@ class ReviewCollection {
   static async findAll() {
     //Just as dummy, I guess, in order to test the addReview form
     console.log("OOOOO");
-    return ReviewModel.find().sort({dateModified: -1})
+    const reviews = await ReviewModel.find().sort({dateModified: -1});
+    return reviews;
   }
 }
 
