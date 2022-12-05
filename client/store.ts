@@ -10,7 +10,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     filter: null, // Username to filter shown freets by (null = show all)
-    shops: [], // All freets created in the app
+    shops: [], // All shops created in the app
+    reviews: [], // All reviews created in the app
     username: null, // Username of the logged in user
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
@@ -45,6 +46,13 @@ const store = new Vuex.Store({
        */
       state.shops = shops;
     },
+    updateReviews(state, reviews) {
+      /**
+       * Update the stored freets to the provided freets.
+       * @param reviews - reviews to store
+       */
+      state.reviews = reviews;
+    },
     async refreshShops(state) {
       /**
        * Request the server for the currently available shops.
@@ -66,6 +74,16 @@ const store = new Vuex.Store({
         body: JSON.stringify({'location': {'lng': location.lng, 'lat': location.lat}, 'radius': radius}),
         headers: {'Content-Type': 'application/json'}, credentials: 'same-origin'}).then(async r => r.json());
       state.shops = res;
+    },
+    async refreshReviews(state) {
+      /**
+       * Request the server for the currently available reviews.
+       */
+      const url = '/api/reviews';
+      console.log('works', url);
+      const res = await fetch(url).then(async r => r.json());
+      console.log('result of reviews fetch', res);
+      state.reviews = res;
     }
   },
   // Store data across page refreshes, only discard on browser close

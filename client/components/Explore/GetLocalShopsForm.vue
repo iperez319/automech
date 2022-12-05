@@ -20,7 +20,7 @@ export default {
       console.log('latitude', coords.latitude);
       var payload = {
         'location': {'lat':coords.latitude,'lng':coords.longitude}, 
-        'radius': 100
+        'radius': 1
       };
       this.$store.commit('refreshLocalShops', payload);
 

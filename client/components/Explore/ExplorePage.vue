@@ -1,5 +1,6 @@
 <template>
   <main>
+    <h4>Discover Mechanic Shops In Your Area</h4>
     <section>
       <b-form>
         <label for="address">Address:</label>

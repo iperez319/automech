@@ -47,19 +47,28 @@ class ReviewCollection {
     await newReview.save();
     return newReview;
   }
-  //Get all Reviews in the database, or find by shopId, or find by shopname
-  static async findAllReviews(shopNameorId?: Types.ObjectId | string){
-    if (shopNameorId){
-      return ReviewModel.find({
-        $or:[
-          {_id: shopNameorId},
-          {name: shopNameorId}
-        ]}).sort({dateModified: -1})
-    } else{
-      return ReviewModel.find().sort({dateModified: -1})
-    }
 
+  static async findAll() {
+    //Just as dummy, I guess, in order to test the addReview form
+    console.log("OOOOO");
+    const reviews = await ReviewModel.find().populate('services').sort({dateModified: -1});
+    return reviews;
   }
 }
 
 export default ReviewCollection;
+
+
+  //Get all Reviews in the database, or find by shopId, or find by shopname
+  // static async findAllReviews(shopNameorId?: Types.ObjectId | string){
+  //   if (shopNameorId){
+  //     return ReviewModel.find({
+  //       $or:[
+  //         {_id: shopNameorId},
+  //         {name: shopNameorId}
+  //       ]}).sort({dateModified: -1})
+  //   } else{
+  //     return ReviewModel.find().sort({dateModified: -1})
+  //   }
+
+  // }
