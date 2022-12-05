@@ -44,11 +44,22 @@
         class="service-input-group mb-2"
         v-for="(service, index) in services"
       >
-        <b-form-input
+<!--         <b-form-input
           placeholder="Service Name"
           class="service-input"
           v-model="services[index].name"
-        />
+        /> -->
+        <multiselect 
+        v-model="services[index].name" 
+        :options="serviceOptions" 
+        :close-on-select="false" 
+        :clear-on-select="false" 
+        :preserve-search="true" 
+        placeholder="Pick some" 
+        track-by="name" 
+        :preselect-first="false">
+        <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+      </multiselect>
         <b-input-group prepend="$" class="service-input">
           <b-form-input
             placeholder="Price"
@@ -93,12 +104,12 @@ export default {
       services: [{ name: "", price: 0 }],
       ratingValue: 1,
       serviceOptions: [
-        { name: "Oil Change" },
-        { name: "Tire Adjustment" },
-        { name: "Spark Plug Replacement" },
-        { name: "Replace Oxygen Sensor" },
-        { name: "Tighten Fuel Cap" },
-        { name: "Replace AC" },
+        "Oil Change",
+        "Tire Adjustment",
+        "Spark Plug Replacement",
+        "Replace Oxygen Sensor",
+        "Tighten Fuel Cap",
+        "Replace AC",
       ],
     };
   },
