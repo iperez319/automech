@@ -21,14 +21,16 @@ router.get(
 
 /**
  * Get all shops within radius, physical proximity
- * @name GET /api/shops/:local
+ * @name POST /api/shops/:local
  *
  * @return - all shops within radius, physical proximity
  */
-router.get(
+router.post(
   '/:local',
   async (req: Request, res: Response) => {
+  	console.log(req);
     const {location, radius} = req.body;
+    console.log('HELLO?', req.body);
     const allLocalShops = await ShopCollection.findShopsWithinRadiusOfLocation(location, radius);
     res.status(200).json(allLocalShops);
   }

@@ -65,7 +65,7 @@ class ShopCollection {
         $near: {
           $geometry: {
             type: "Point",
-            coordinates: [location.lng, location.lat],
+            coordinates: [location.lat, location.lng],
           },
           $maxDistance: radius * 1609, // Convert from mi to meters
         },

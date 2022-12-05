@@ -54,12 +54,17 @@ const store = new Vuex.Store({
       const res = await fetch(url).then(async r => r.json());
       state.shops = res;
     },
-    async refreshLocalShops(state) {
+    async refreshLocalShops(state, payload) {
       /**
        * Request the server for the currently available local shops.
        */
       const url = '/api/shops/:local';
-      const res = await fetch(url).then(async r => r.json());
+      const {location, radius} = payload;
+      console.log(location, radius);
+      const res = await fetch(url, {
+        method: 'POST', 
+        body: JSON.stringify({'location': {'lng': location.lng, 'lat': location.lat}, 'radius': radius}),
+        headers: {'Content-Type': 'application/json'}, credentials: 'same-origin'}).then(async r => r.json());
       state.shops = res;
     }
   },
