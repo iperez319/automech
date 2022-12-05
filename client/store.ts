@@ -49,7 +49,7 @@ const store = new Vuex.Store({
     updateReviews(state, reviews) {
       /**
        * Update the stored freets to the provided freets.
-       * @param freets - Freets to store
+       * @param reviews - reviews to store
        */
       state.reviews = reviews;
     },
@@ -81,7 +81,7 @@ const store = new Vuex.Store({
        */
       const url = '/api/reviews';
       console.log('works', url);
-      const res = await fetch(url, {method: 'GET'}).then(async r => r.json());
+      const res = await fetch(url).then(async r => r.json());
       state.shops = res;
     }
   },

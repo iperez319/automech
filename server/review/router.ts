@@ -7,7 +7,7 @@ const router = express.Router();
 
 
 /**
- * Post new review
+ * Get all reviews
  *
  * @name GET /api/reviews
  *
@@ -15,7 +15,7 @@ const router = express.Router();
 router.get(
   '/',
   async (req: Request, res: Response) => {
-    const allReviews = await ReviewCollection.findAllReviews();
+    const allReviews = await ReviewCollection.findAll();
     res.status(200).json(allReviews);
   }
 );
