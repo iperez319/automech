@@ -38,7 +38,12 @@
         >
       </div>
 
-      <b-button variant="primary" type="submit" @click="handleSubmit">
+      <b-button
+        variant="primary"
+        type="submit"
+        @click="handleSubmit"
+        class="mt-2"
+      >
         Submit
       </b-button>
     </b-form>
@@ -96,5 +101,6 @@ export default {
 .service-input-group {
   display: flex;
   gap: 10px;
+  margin-bottom: 8px;
 }
 </style>
