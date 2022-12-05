@@ -10,11 +10,22 @@
       <label>Services:</label>
       <div>
         <div class="service-input-group" v-for="(service, index) in services">
-          <b-form-input
+          <!-- <b-form-input
             placeholder="Service Name"
             class="service-input"
             v-model="services[index].name"
-          />
+          /> -->
+          <b-form-select
+            v-model="services[index].name"
+            :options="[
+              'Oil Change',
+              'Tire Adjustment',
+              'Spark Plug Replacement',
+              'Replace Oxygen Sensor',
+              'Tighten Fuel Cap',
+              'Replace AC',
+            ]"
+          ></b-form-select>
           <b-input-group prepend="$" class="service-input">
             <b-form-input
               placeholder="Price"
