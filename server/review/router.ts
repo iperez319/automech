@@ -5,6 +5,22 @@ import express from "express";
 
 const router = express.Router();
 
+
+/**
+ * Post new review
+ *
+ * @name GET /api/reviews
+ *
+ */
+router.get(
+  '/',
+  async (req: Request, res: Response) => {
+    const allReviews = await ReviewCollection.findAllReviews();
+    res.status(200).json(allReviews);
+  }
+);
+
+
 /**
  * Post new review
  *
@@ -32,5 +48,8 @@ router.post(
     res.status(200).json(newReview);
   }
 );
+
+
+
 
 export { router as reviewRouter };

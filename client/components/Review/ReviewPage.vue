@@ -18,6 +18,32 @@
         <ReviewSummary :datum="datum" />
       </div>
     </section>
+    </section>
+      <div class="middle">
+        <GetReviewsForm
+          ref="getReviewsForm"
+          button="🔄 Get all reviews"
+        />
+      </div>
+
+      <section
+        v-if="$store.state.reviews.length"
+      >
+        <ReviewSummary
+          v-for="review in $store.state.reviews"
+          :key="review.id"
+          :shop="review"
+        />
+      </section>
+      <!--
+      <div class="display">
+        <div style="flex-shrink: 0" class="listContainer">
+          <ShopListItem v-for="shop in results" :shop="shop" />
+        </div>
+        <div id="map"></div>
+      </div>
+      /> -->
+    </section>
   </main>
 </template>
 
@@ -25,6 +51,7 @@
 import ReviewForm from "@/components/Review/ReviewForm.vue";
 import ReviewForm2 from "@/components/Review/ReviewForm2.vue";
 import ReviewSummary from "@/components/Review/ReviewSummary.vue";
+import GetReviewsForm from "@/components/Review/GetReviewsForm.vue";
 import { Loader } from "@googlemaps/js-api-loader";
 
 export default {
@@ -33,6 +60,7 @@ export default {
     ReviewForm,
     ReviewForm2,
     ReviewSummary,
+    GetReviewsForm
   },
   data() {
     return {
