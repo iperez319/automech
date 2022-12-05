@@ -82,7 +82,8 @@ const store = new Vuex.Store({
       const url = '/api/reviews';
       console.log('works', url);
       const res = await fetch(url).then(async r => r.json());
-      state.shops = res;
+      console.log('result of reviews fetch', res);
+      state.reviews = res;
     }
   },
   // Store data across page refreshes, only discard on browser close

@@ -1,7 +1,7 @@
 <template>
 	<div class="card">
 	  <div class="card-body">
-	    <h4>{{datum.shop}}</h4>
+	    <h4>{{datum.name}}</h4>
 	    <p><h6 class="inline">Model:</h6> {{datum.model}}</p>
 	    <p><h6 class="inline">Services:</h6></p>
 	    <b-list-group >
@@ -31,7 +31,7 @@ export default {
   props: {
   	datum: {
   		type: Object,
-  		default: {}
+  		default: () => {}
   	}
   },
   methods: {

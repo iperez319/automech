@@ -32,7 +32,7 @@
         <ReviewSummary
           v-for="review in $store.state.reviews"
           :key="review.id"
-          :shop="review"
+          :datum="review"
         />
       </section>
       <!--
