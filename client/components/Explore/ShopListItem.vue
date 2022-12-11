@@ -2,7 +2,11 @@
   <b-card style="width: fit-content">
     <div>
       <div class="header">
-        <h4>{{ shop.name }}</h4>
+        <h4>
+          <a :href="'#/shop/' + shop.googlePlaceId" style="color: black">{{
+            shop.name
+          }}</a>
+        </h4>
         <br />
         <b-form-rating
           inline

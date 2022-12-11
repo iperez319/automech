@@ -5,6 +5,7 @@ import AccountPage from "./components/Account/AccountPage.vue";
 import ReviewPage from "./components/Review/ReviewPage.vue";
 import LoginPage from "./components/Login/LoginPage.vue";
 import ExplorePage from "./components/Explore/ExplorePage.vue";
+import ShopDetailPage from "./components/Explore/ShopDetailPage.vue";
 import ComparePage from "./components/Compare/ComparePage.vue";
 import CompareResultsPage from "./components/Compare/CompareResultsPage.vue";
 import NotFound from "./NotFound.vue";
@@ -20,6 +21,11 @@ const routes = [
     name: "Compare Results Page",
     component: CompareResultsPage,
     props: true,
+  },
+  {
+    path: "/shop/:shopId",
+    name: "Shop Detail Page",
+    component: ShopDetailPage,
   },
   { path: "/compare", name: "Compare Page", component: ComparePage },
   { path: "/account", name: "Account", component: AccountPage },
