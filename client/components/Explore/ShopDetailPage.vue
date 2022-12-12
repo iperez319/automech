@@ -1,37 +1,80 @@
 <!-- TODO: Finish laying out information -->
 <template>
-  <main>
-    <h2>{{ results.name }}</h2>
-    <b-rating :value="results.rating" inline no-border readonly></b-rating>
-    <h3>{{ results.formatted_address }}</h3>
-    <h3>{{ results.formatted_phone_number }}</h3>
-    <a :href="results.website">{{ results.website }}</a>
-    <b-carousel
-      v-model="slide"
-      :interval="4000"
-      controls
-      indicators
-      background="#ababab"
-      img-width="400px"
-      img-height="480px"
-      style="text-shadow: 1px 1px 2px #333"
-    >
-      <b-carousel-slide
-        v-for="image in images"
-        :img-src="image"
-      ></b-carousel-slide>
-    </b-carousel>
-    <section>
-      <h3>Business Hours</h3>
-      <div>
-        <p v-for="day in results.opening_hours.weekday_text">{{ day }}</p>
-      </div>
-    </section>
-    <section>
-      <h3>Reviews</h3>
+  <b-container>
+    <main>
+      <section>
+        <h1>{{ results.name }}</h1>
+        <div style="display: flex; gap: 10px; align-items: baseline">
+          <b-rating
+            :value="results.rating"
+            inline
+            no-border
+            readonly
+          ></b-rating>
+          <h5>{{ results.user_ratings_total }} reviews</h5>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: baseline">
+          <h5 v-if="!currentOpeningHours.status">CLOSED</h5>
+          <h5 v-if="currentOpeningHours.status">OPEN</h5>
+          <h5 v-if="currentOpeningHours.status">
+            {{ currentOpeningHours.hours }}
+          </h5>
+        </div>
+      </section>
+
+      <div class="dropdown-divider"></div>
+
+      <section>
+        <h3>Photos (currently broken)</h3>
+        <b-carousel
+          v-model="slide"
+          :interval="4000"
+          controls
+          indicators
+          background="#ababab"
+          img-width="400px"
+          img-height="480px"
+          style="text-shadow: 1px 1px 2px #333"
+        >
+          <b-carousel-slide
+            v-for="image in images"
+            :img-src="image"
+          ></b-carousel-slide>
+        </b-carousel>
+      </section>
+
+      <div class="dropdown-divider"></div>
+
+      <section>
+        <h3>Location and Hours</h3>
+        <div style="display: flex; gap: 10px">
+          <div>
+            <div id="map"></div>
+            <p>{{ results.formatted_address }}</p>
+          </div>
+          <div>
+            <p
+              v-for="day in results.opening_hours.weekday_text"
+              style="font-weight: bold; margin-bottom: 0.1rem"
+            >
+              {{ day }}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="dropdown-divider"></div>
+      <section>
+        <h3>Reviews</h3>
+      </section>
+
+      <!-- <h3>{{ results.formatted_address }}</h3>
+      <h3>{{ results.formatted_phone_number }}</h3>
+      <a :href="results.website">{{ results.website }}</a> -->
+
       <!-- TODO: Finish review section -->
-    </section>
-  </main>
+    </main>
+  </b-container>
 </template>
 
 <script>
@@ -301,6 +344,16 @@ export default {
         return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photo.photo_reference}&key=AIzaSyBDEqPqGsjpE-nVKMnMvvblsXpZbS7ZK_w`;
       });
     },
+    currentOpeningHours() {
+      const d = new Date();
+      let day = 2; //d.getDay();
+
+      let currentOpeningHours =
+        this.results.opening_hours.weekday_text[(6 + day) % 7].split(": ")[1];
+      let isOpen = true; //this.results.opening_hours.open_now;
+
+      return { hours: currentOpeningHours, status: isOpen };
+    },
   },
 };
 </script>
@@ -314,5 +367,11 @@ export default {
 
 .carousel {
   width: fit-content;
+}
+
+#map {
+  background: black;
+  width: 300px;
+  height: 150px;
 }
 </style>
