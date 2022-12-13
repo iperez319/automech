@@ -15,10 +15,14 @@ class ShopCollection {
     coordinates: { lat: number; lng: number },
     address: string
   ): Promise<Shop> {
-    if (!googlePlaceId) return null;
+    if (!googlePlaceId) throw new Error("Missing googlePlaceId");
 
     let currentShop = await ShopCollection.findByPlaceId(googlePlaceId);
-    if (currentShop) return currentShop;
+    if (currentShop) {
+      console.log("CURRENT");
+      console.log("CURRENT", currentShop);
+      return currentShop;
+    }
 
     console.log("Adding shop ", { name, googlePlaceId, coordinates, address });
 
@@ -44,9 +48,7 @@ class ShopCollection {
   }
 
   static async findByPlaceId(googlePlaceId: string) {
-    const shop = await ShopModel.findOne({ googlePlaceId }, null, {
-      lean: true,
-    });
+    const shop = await ShopModel.findOne({ googlePlaceId });
     return shop;
   }
 
@@ -71,9 +73,7 @@ class ShopCollection {
           $maxDistance: radius * 1609, // Convert from mi to meters
         },
       },
-    }).populate('ratings');
-
-    
+    }).populate("ratings");
 
     return shops;
   }

@@ -171,38 +171,50 @@ function getRandomNumberInRange(min: number, max: number) {
   return rounded + min;
 }
 
+function formatShop(shop: Shop): ShopRequest {
+  const { name, location, address, googlePlaceId } = shop;
+  return {
+    name,
+    address,
+    googlePlaceId,
+    coordinates: {
+      lat: location.coordinates[1],
+      lng: location.coordinates[0],
+    },
+  };
+}
+
 const generateReviews = async (n: number, users: User[], shops: Shop[]) => {
   const reviews: Review[] = [];
   for (let i = 0; i < n; i++) {
     let currentUser = users[i % users.length];
     let currentShopObj = shops[i % shops.length];
-    let currentShop: ShopRequest = {
-      ...currentShopObj,
-      coordinates: {
-        lat: currentShopObj.location.coordinates[1],
-        lng: currentShopObj.location.coordinates[0],
-      },
-    };
-    let currentService = basicServices[i % basicServices.length];
-    const priceRange = currentService.cheapRange;
-    let servicePrice = getRandomNumberInRange(priceRange.min, priceRange.max);
-    const service = {
-      name: currentService.name,
-      price: servicePrice,
-    };
+    let currentShop = formatShop(currentShopObj);
+    // let currentService = basicServices[i % basicServices.length];
+    // const priceRange = currentService.cheapRange;
+    // let servicePrice = getRandomNumberInRange(priceRange.min, priceRange.max);
+    // const service = {
+    //   name: currentService.name,
+    //   price: servicePrice,
+    // };
     const [make, model] = faker.vehicle.vehicle().split(" ");
     let car = {
       year: faker.date.past(10).getFullYear(),
       make,
       model,
     };
+
+    let content =
+      "While this is only my second maintenance experience with Good News Garage, each visit reinforces how honest, hardworking and educational these guys are. They hold my hand through each step as I have not owned a car in decades! They strive for the highest quality and err on the side of conservative so you don't blow out your budget. I had an emergency a few weeks before my scheduled maintenance and had to have a gas station garage do some work and I called Casey panicked.\nHe explained why it waa imperative to take care of the issue immediately and even spoke with the mechanic doing the work. That's above and beyond! Ryan is equally helpful as he walked me through some brake issues and other work that can be scheduled over time. Good New Garage is tops in my opinion! I moved 40 minutes away and will continue to go to them given all of the above. Thank you to everyone at Good News!";
+
     let rating = getRandomNumberInRange(1, 5);
     const newReview = await ReviewCollection.addOne(
-      [service],
+      // [service],
       car,
       currentShop,
       rating,
-      currentUser._id.toString()
+      currentUser._id.toString(),
+      content
     );
 
     reviews.push(await newReview);

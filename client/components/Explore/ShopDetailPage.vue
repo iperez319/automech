@@ -2,7 +2,7 @@
 <template>
   <b-container>
     <main>
-      <section>
+      <section v-if="results">
         <h1>{{ results.name }}</h1>
         <div style="display: flex; gap: 10px; align-items: baseline">
           <b-rating
@@ -10,6 +10,7 @@
             inline
             no-border
             readonly
+            style="padding-left: 0"
           ></b-rating>
           <h5>{{ results.user_ratings_total }} reviews</h5>
         </div>
@@ -25,22 +26,16 @@
       <div class="dropdown-divider"></div>
 
       <section>
-        <h3>Photos (currently broken)</h3>
-        <b-carousel
-          v-model="slide"
-          :interval="4000"
-          controls
-          indicators
-          background="#ababab"
-          img-width="400px"
-          img-height="480px"
-          style="text-shadow: 1px 1px 2px #333"
+        <h3>Photos</h3>
+        <div
+          style="display: flex; gap: 20px; align-items: center; overflow: auto"
         >
-          <b-carousel-slide
+          <b-img
             v-for="image in images"
-            :img-src="image"
-          ></b-carousel-slide>
-        </b-carousel>
+            :src="image"
+            style="max-height: 300px; width: auto"
+          />
+        </div>
       </section>
 
       <div class="dropdown-divider"></div>
@@ -49,8 +44,8 @@
         <h3>Location and Hours</h3>
         <div style="display: flex; gap: 10px">
           <div>
-            <div id="map"></div>
-            <p>{{ results.formatted_address }}</p>
+            <div id="map" v-b-visible="mapIsVisibleHandler"></div>
+            <p v-html="address"></p>
           </div>
           <div>
             <p
@@ -66,6 +61,10 @@
       <div class="dropdown-divider"></div>
       <section>
         <h3>Reviews</h3>
+        <ReviewForm class="mb-2" />
+        <div>
+          <ReviewCard v-for="review in reviews" :review="review" class="mb-2" />
+        </div>
       </section>
 
       <!-- <h3>{{ results.formatted_address }}</h3>
@@ -78,12 +77,17 @@
 </template>
 
 <script>
+import ReviewCard from "./ReviewCard.vue";
+import ReviewForm from "./ReviewForm.vue";
+import { Loader } from "@googlemaps/js-api-loader";
+
 export default {
   name: "ShopDetailPage",
-  components: {},
+  components: { ReviewCard, ReviewForm },
   data() {
     return {
       slide: 0,
+      reviews: [],
       results: {
         formatted_address: "75 Hamilton St, Cambridge, MA 02139, USA",
         formatted_phone_number: "(617) 354-5383",
@@ -354,11 +358,57 @@ export default {
 
       return { hours: currentOpeningHours, status: isOpen };
     },
+    address() {
+      if (!this.results.formatted_address) return;
+      const address_split = this.results.formatted_address.split(", ");
+
+      const street_name = address_split[0];
+      const remaining = address_split.splice(1).join(", ");
+
+      return `<b>${street_name}</b><br>${remaining}`;
+    },
+  },
+  methods: {
+    mapIsVisibleHandler(isVisible) {
+      if (isVisible && this.results) {
+        let coordinates = this.results.geometry.location;
+
+        let map = new google.maps.Map(document.getElementById("map"), {
+          center: coordinates,
+          zoom: 15,
+        });
+
+        // TODO: Add InfoWindow to show shop details in map
+
+        const marker = new google.maps.Marker({
+          position: coordinates,
+          map: map,
+        });
+      }
+    },
+  },
+  async mounted() {
+    const req = await fetch("/api/reviews/" + this.$route.params.shopId);
+    const resp = await req.json();
+    this.reviews = resp;
+
+    const loader = new Loader({
+      apiKey: "AIzaSyBDEqPqGsjpE-nVKMnMvvblsXpZbS7ZK_w",
+      libraries: ["places"],
+    });
+
+    loader.loadCallback((e) => {
+      if (e) console.log(e);
+      else {
+        console.log("LOADED");
+        this.loaded = true;
+      }
+    });
   },
 };
 </script>
 
-<style>
+<style scoped>
 .carousel-item img {
   width: 400px;
   min-height: 200px;

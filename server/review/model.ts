@@ -26,7 +26,8 @@ export type Review = {
   rating: number;
   model: Model; // TODO: Change this to Model type
   shop: Types.ObjectId;
-  author: Types.ObjectId;
+  author: string | Types.ObjectId;
+  content: string;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -59,6 +60,7 @@ const ReviewSchema = new Schema<Review>({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  content: String,
 });
 
 const ReviewModel = model<Review>("Review", ReviewSchema);
