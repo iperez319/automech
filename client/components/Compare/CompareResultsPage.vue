@@ -1,27 +1,41 @@
 <template>
-  <b-container
-    v-if="firstQuartile && thirdQuartile && percentile"
-    class="text-center"
-  >
-    <h4>
-      <span class="cost">${{ totalCost }}</span> for {{ serviceNames }} is
-      {{ priceRange }} for your area
-    </h4>
-    <ColorBar
-      :firstQuartile="firstQuartile"
-      :thirdQuartile="thirdQuartile"
-      :costPercentile="percentile"
-    />
+  <b-container v-if="firstQuartile && thirdQuartile && percentile">
+    <section class="text-center mb-4">
+      <h4>
+        <span class="cost">${{ totalCost }}</span> for {{ serviceNames }} is
+        {{ priceRange }} for your area
+      </h4>
+      <ColorBar
+        :firstQuartile="firstQuartile"
+        :thirdQuartile="thirdQuartile"
+        :costPercentile="percentile"
+      />
+    </section>
+    <section>
+      <h3>Feed</h3>
+      <TransactionCard
+        v-for="transaction in transactions"
+        :transaction="transaction"
+        class="mb-2"
+      />
+    </section>
   </b-container>
 </template>
 
 <script>
 import ColorBar from "./ColorBar.vue";
+import TransactionCard from "./TransactionCard.vue";
+
 export default {
   name: "CompareResultsPage",
-  components: { ColorBar },
+  components: { ColorBar, TransactionCard },
   data() {
-    return { firstQuartile: null, thirdQuartile: null, percentile: null };
+    return {
+      firstQuartile: null,
+      thirdQuartile: null,
+      percentile: null,
+      transactions: null,
+    };
   },
   props: ["shop", "services", "car"],
   computed: {
@@ -74,6 +88,14 @@ export default {
       this.thirdQuartile = thirdQuartile;
       this.percentile = percentile;
     }
+
+    const queryParams = this.services
+      .map((service) => `services[]=${service.name}`)
+      .join("");
+
+    const trans_req = await fetch("/api/services?" + queryParams);
+    const trans_res = await trans_req.json();
+    this.transactions = trans_res;
   },
 };
 </script>

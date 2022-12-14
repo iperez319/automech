@@ -13,6 +13,8 @@ import type { User } from "../user/model";
 import type { Shop, ShopRequest } from "../shop/model";
 import type { Review } from "../review/model";
 import ReviewCollection from "../review/collection";
+import ServiceCollection from "../service/collection";
+import { services } from "client/utils/constants";
 
 const router = express.Router();
 const client = new Client();
@@ -221,11 +223,37 @@ const generateReviews = async (n: number, users: User[], shops: Shop[]) => {
   }
 };
 
+const generateServices = async (n: number, users: User[], shops: Shop[]) => {
+  let services = [];
+  for (let i = 0; i < n; i++) {
+    let currentUser = users[i % users.length];
+    let currentShopObj = shops[i % shops.length];
+    let currentShop = formatShop(currentShopObj);
+
+    let currentService = basicServices[i % basicServices.length];
+    const priceRange = currentService.cheapRange;
+    let servicePrice = getRandomNumberInRange(priceRange.min, priceRange.max);
+    const service = {
+      name: currentService.name,
+      price: servicePrice,
+    };
+
+    const newService = await ServiceCollection.addOne(
+      service.name,
+      service.price,
+      currentShopObj._id.toString(),
+      currentUser._id.toString()
+    );
+    services.push(newService);
+  }
+  return services;
+};
+
 router.get("/", async (req: Request, res: Response) => {
   const users = await generateFakeUsers(100);
   const shops = await generateShops(100);
   const reviews = await generateReviews(1000, users, shops);
-
+  const services = await generateServices(1000, users, shops);
   res.status(200).json({ message: "Succesfully seeded database" });
 });
 

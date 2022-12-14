@@ -81,6 +81,13 @@ class ServiceCollection {
 
     return { result };
   }
+
+  static async findByServices(services: string[]) {
+    const result = await ServiceModel.find({
+      name: { $in: services },
+    }).populate(["user", "shop"]);
+    return result;
+  }
 }
 
 export default ServiceCollection;

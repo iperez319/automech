@@ -7,6 +7,7 @@ import type { Model } from "../review/model";
 import type { Service } from "./model";
 import type { ShopRequest } from "../shop/model";
 import * as userValidator from "../user/middleware";
+import { formatService } from "./util";
 
 const router = express.Router();
 
@@ -107,6 +108,13 @@ router.post("/", [userValidator.isUserLoggedIn], async (req, res) => {
   }
 
   res.status(200).json({ success: true });
+});
+
+router.get("/", async (req, res) => {
+  let { services } = req.query;
+  console.log(services);
+  const result = await ServiceCollection.findByServices(services);
+  res.status(200).json(result.map((s) => formatService(s)));
 });
 
 export { router as serviceRouter };
