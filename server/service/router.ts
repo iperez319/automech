@@ -1,10 +1,12 @@
 // @ts-nocheck
 import type { Request, Response } from "express";
+import ShopCollection from "../shop/collection";
 import ServiceCollection from "./collection";
 import express from "express";
 import type { Model } from "../review/model";
 import type { Service } from "./model";
 import type { ShopRequest } from "../shop/model";
+import * as userValidator from "../user/middleware";
 
 const router = express.Router();
 
@@ -79,6 +81,32 @@ router.post("/compare", async (req: Request, res: Response) => {
     thirdQuartile: totalThirdQuartile,
     percentile,
   });
+});
+
+router.post("/", [userValidator.isUserLoggedIn], async (req, res) => {
+  const {
+    services,
+    shop: { name, googlePlaceId, coordinates, address },
+    model,
+  } = req.body;
+
+  let shop = await ShopCollection.addOneIfDoesNotExist(
+    name,
+    googlePlaceId,
+    coordinates,
+    address
+  );
+
+  for (let service of services) {
+    await ServiceCollection.addOne(
+      service.name,
+      service.price,
+      shop._id,
+      req.session.userId
+    );
+  }
+
+  res.status(200).json({ success: true });
 });
 
 export { router as serviceRouter };

@@ -34,7 +34,7 @@
         ><b-icon-plus /> Add Service</b-button
       >
     </div>
-    <b-button class="mt-2" variant="primary" @click="postReview()"
+    <b-button class="mt-2" variant="primary" @click="postPrice()"
       >Post</b-button
     >
   </b-card>
@@ -46,7 +46,7 @@ import ShopAutocomplete from "@/components/common/ShopAutocomplete.vue";
 export default {
   name: "PriceForm",
   components: { ShopAutocomplete },
-  props: ['shop'],
+  props: ["shop"],
   data() {
     return {
       shop: {},
@@ -54,25 +54,31 @@ export default {
       services: [{ name: "", price: 0 }],
     };
   },
-  method: {
-    async postReview() {
+  methods: {
+    async postPrice() {
       if (!this.inputsAreValid()) return;
+      let model = this.car.split(" ");
       const opt = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           shop: this.shop,
-          car: this.car,
-          services: this.services
+          model: {
+            year: parseInt(model[0]),
+            make: model[1],
+            model: model[2],
+          },
+          services: this.services,
         }),
       };
-      const req = await fetch("/api/reviews", opt);
+      const req = await fetch("/api/services", opt);
     },
     inputsAreValid() {
-      if (car.split(" ").length != 3) {
+      if (this.car.split(" ").length != 3) {
         alert("Please enter car in specified format");
         return false;
       }
+      return true;
     },
   },
 };
