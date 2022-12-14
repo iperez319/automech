@@ -14,7 +14,7 @@ Vue.use(VueRouter);
 
 const routes = [
   { path: "/", name: "Home", component: ExplorePage },
-  { path: "/review", name: "Review", component: ReviewPage },
+  // { path: "/review", name: "Review", component: ReviewPage },
   { path: "/explore", name: "Explore Page", component: ExplorePage },
   {
     path: "/compare/result",
